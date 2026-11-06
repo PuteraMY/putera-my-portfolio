@@ -1,26 +1,3 @@
 "use client";
-import Image from "next/image";
-import { useState } from "react";
-import { GraduationCap, Layers3 } from "lucide-react";
-import { site } from "@/data/site";
-import { useLanguage } from "./LanguageToggle";
-import ScrollReveal from "./ScrollReveal";
-export default function About() {
-  const { t } = useLanguage();
-  const [photoMissing, setPhotoMissing] = useState(false);
-  return <section id="about" aria-labelledby="about-heading" className="section-space">
-    <div className="container-site grid items-center gap-14 lg:grid-cols-[.85fr_1.15fr] lg:gap-20">
-      <ScrollReveal><div className="relative mx-auto max-w-[430px]">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[26px] border border-purple-200 bg-gradient-to-br from-[#3C1365] via-brand to-[#8956C4] dark:border-white/10">
-          {!photoMissing ? <Image src={site.profileImage} alt={t.about.photo} fill sizes="(min-width:1024px) 430px, 100vw" className="object-cover" onError={() => setPhotoMissing(true)} /> :
-            <div role="img" aria-label={t.about.profile} className="flex h-full flex-col items-center justify-center text-white"><span className="text-[clamp(6rem,16vw,9rem)] font-black tracking-[-.1em]" aria-hidden>PM<span className="text-brand-lime">.</span></span><span className="text-base font-bold tracking-[.12em]">{t.about.profile}</span></div>}
-        </div>
-        <div className="absolute -bottom-5 right-4 flex items-center gap-3 rounded-xl border border-neutral-200 bg-white px-4 py-3 text-sm font-bold shadow-xl dark:border-white/10 dark:bg-[#251B31]"><GraduationCap size={21} className="text-brand dark:text-brand-lime" aria-hidden/>Cloud Computing</div>
-      </div></ScrollReveal>
-      <ScrollReveal delay={.1}><p className="eyebrow">{t.about.eyebrow}</p><h2 id="about-heading" className="section-heading mt-5">{t.about.title}</h2>
-        <div className="mt-7 space-y-4">{[t.about.p1,t.about.p2,t.about.p3,t.about.p4].map((p,i) => <p key={i} className="section-copy">{p}</p>)}</div>
-        <div className="mt-9 flex gap-4 rounded-2xl border border-neutral-200 bg-[#F7F4FA] p-5 dark:border-white/10 dark:bg-white/5"><Layers3 className="mt-1 shrink-0 text-brand dark:text-brand-lime" size={24} aria-hidden/><p className="text-base font-semibold leading-7">Front-End · Cloud Computing · IT Support</p></div>
-      </ScrollReveal>
-    </div>
-  </section>;
-}
+import {useState} from "react";import Image from "next/image";import {ArrowUpRight} from "lucide-react";import {site} from "@/data/site";import {useLanguage} from "./LanguageToggle";import Reveal from "./Reveal";
+export default function About(){const {t}=useLanguage();const [failed,setFailed]=useState(false);const facts=[{label:t.about.study,value:t.about.studyValue},{label:t.about.focus,value:t.about.focusValue},{label:t.about.work,value:t.about.workValue}];return <section id="about" aria-labelledby="about-title" className="section-space"><div className="container-12 grid-12 items-center gap-y-14"><div className="col-span-12 lg:col-span-7"><span className="label-mono text-muted">{t.about.eyebrow}</span><Reveal mask className="mt-6"><h2 id="about-title" className="heading-section max-w-3xl">{t.about.title}</h2></Reveal><div className="mt-10 max-w-2xl space-y-5">{t.about.paragraphs.map((paragraph,i)=><p key={i} className="text-[clamp(17px,1.3vw,19px)] leading-[1.8] text-muted">{paragraph}</p>)}</div><dl className="mt-14 max-w-2xl border-t-[1.5px] border-border">{facts.map((fact,i)=><div key={fact.label} className="grid grid-cols-12 gap-4 border-b border-hairline py-5"><dt className="label-mono col-span-5 text-muted">0{i+1} / {fact.label}</dt><dd className="col-span-7 text-base font-semibold">{fact.value}</dd></div>)}</dl></div><div className="col-span-12 md:col-span-8 md:col-start-3 lg:col-span-5 lg:col-start-8"><div className="relative flex aspect-[4/5] flex-col justify-between overflow-hidden rounded-card border-[1.5px] border-border bg-surface-2 p-7">{site.photoAvailable&&!failed?<Image src={site.photoPath} alt={t.about.photo} fill sizes="(min-width:1024px) 420px,(min-width:768px) 55vw,100vw" className="object-cover" onError={()=>setFailed(true)}/>:<><div className="flex justify-between border-b-[1.5px] border-border pb-5"><span className="label-mono text-muted">PUTERA MY / PROFILE</span><ArrowUpRight size={23}/></div><div role="img" aria-label="Putera MY profile fallback" className="flex flex-1 items-center"><p className="font-heading text-[clamp(64px,8vw,110px)] font-bold leading-[.9] tracking-[-.06em]">Putera<br/>MY<span className="text-primary">.</span></p></div><p className="label-mono border-t-[1.5px] border-border pt-5 text-muted">FRONT-END / CLOUD / IT</p></>}</div></div></div></section>
