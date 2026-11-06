@@ -4,23 +4,33 @@ import { projects, type ProjectStatus } from "@/data/projects";
 import { useLanguage } from "./LanguageToggle";
 import ScrollReveal from "./ScrollReveal";
 import ProjectCard from "./ProjectCard";
+
 type Filter = ProjectStatus | "all";
 export default function Projects() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [filter, setFilter] = useState<Filter>("all");
-  const filterEnabled = projects.length >= 4;
+  const enabled = projects.length >= 4;
   const filters: { id: Filter; label: string }[] = [
-    { id: "all", label: t.projects.all }, { id: "live", label: t.projects.live },
-    { id: "in-development", label: t.projects.development }, { id: "coming-soon", label: t.projects.soon }
+    { id: "all", label: t.projects.all },
+    { id: "live", label: t.projects.live },
+    { id: "in-development", label: t.projects.development },
+    { id: "coming-soon", label: t.projects.soon },
   ];
-  const visible = projects.filter(p => !filterEnabled || filter === "all" || p.status === filter).sort((a,b) => Number(b.featured) - Number(a.featured));
-  return <section id="projects" aria-labelledby="projects-heading" className="section-space border-t border-neutral-200 dark:border-white/10">
+  const visible = projects.filter(p => !enabled || filter === "all" || p.status === filter).sort((a, b) => Number(b.featured) - Number(a.featured));
+  return <section className="ed-work" id="projects" aria-labelledby="projects-heading">
     <div className="container-site">
-      <ScrollReveal><p className="eyebrow">{t.projects.eyebrow}</p><h2 id="projects-heading" className="section-heading mt-5">{t.projects.title}</h2><p className="section-copy mt-6 max-w-[650px]">{t.projects.intro}</p></ScrollReveal>
-      {filterEnabled && <div role="group" aria-label={t.projects.all} className="mt-10 flex flex-wrap gap-2">{filters.map(item =>
-        <button key={item.id} type="button" aria-pressed={filter === item.id} onClick={() => setFilter(item.id)} className={"min-h-11 rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors " + (filter === item.id ? "border-brand bg-brand text-white" : "border-neutral-200 bg-white text-[#43394F] hover:border-brand dark:border-white/20 dark:bg-white/5 dark:text-white")}>{item.label}</button>
-      )}</div>}
-      <div className="mt-12 grid gap-7 md:grid-cols-2">{visible.length ? visible.map((project, index) => <ScrollReveal key={project.id} className="h-full" delay={index < 2 ? index * .08 : 0}><ProjectCard project={project} index={index}/></ScrollReveal>) : <p className="section-copy md:col-span-2">{t.projects.none}</p>}</div>
+      <ScrollReveal>
+        <div className="ed-section-line"><span>{t.projects.eyebrow}</span><span>PUTERA MY / 001–003</span></div>
+        <h2 className="ed-section-heading" id="projects-heading">{t.projects.title}</h2>
+        <p className="ed-work-sub">{t.projects.intro}</p>
+      </ScrollReveal>
+      {enabled && <div role="group" aria-label={language === "bm" ? "Penapis projek" : "Project status filters"} className="ed-filter">
+        {filters.map(option => <button type="button" key={option.id} aria-pressed={filter === option.id} onClick={() => setFilter(option.id)}>{option.label}</button>)}
+      </div>}
+      <div className="ed-projects" aria-live="polite">
+        {visible.map((project, i) => <ScrollReveal key={project.id} delay={i < 2 ? i * .07 : 0} className="h-full"><ProjectCard project={project} index={i}/></ScrollReveal>)}
+        {!visible.length && <p style={{ color: "white" }}>{t.projects.none}</p>}
+      </div>
     </div>
   </section>;
 }

@@ -5,9 +5,15 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: { sans: ["var(--font-inter)", "Arial", "sans-serif"] },
-      colors: { brand: { DEFAULT: "#6422B1", deep: "#48137F", lime: "#D1FF76" } },
-      maxWidth: { content: "1160px" },
-      borderRadius: { card: "1.25rem" }
+      colors: {
+        brand: {
+          DEFAULT: "#142638",
+          deep: "#0C1B27",
+          lime: "#D5A16C"
+        }
+      },
+      maxWidth: { content: "1180px" },
+      borderRadius: { card: "0.5rem" }
     }
   },
   plugins: []
