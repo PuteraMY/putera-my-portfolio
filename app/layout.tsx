@@ -1,29 +1,58 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeToggle";
-import { LanguageProvider } from "@/components/LanguageToggle";
-import { site } from "@/data/site";
+import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Providers } from "@/context/theme-provider";
+import { site } from "@/data/portfolio";
 import "./globals.css";
+
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
-const baseUrl = site.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000");
-const description = "PUTERA MY — Front-End Developer with Cloud Computing & IT Support skills. Explore NimbusCloud and CINEX, projects built by Putera.";
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap", variable: "--font-jakarta" });
+const mono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--font-mono" });
+
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: "Putera MY | Front-End Developer, Cloud & IT Support",
-  description,
-  applicationName: "PUTERA MY Portfolio",
-  keywords: ["Putera MY", "Front-End Developer", "Cloud Computing", "IT Support", "NimbusCloud", "CINEX", "Next.js", "React", "TypeScript"],
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", title: "Putera MY | Front-End Developer", description, siteName: "PUTERA MY", locale: "en_US", images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "PUTERA MY portfolio" }] },
-  twitter: { card: "summary_large_image", title: "Putera MY | Front-End Developer", description, images: ["/opengraph-image"] },
+  metadataBase: new URL(site.url),
+  title: { default: "Putera MY — Web Developer & Cloud Computing", template: "%s | Putera MY" },
+  description: site.description,
+  openGraph: {
+    title: "Putera MY — Web Developer & Cloud Computing",
+    description: site.description,
+    url: site.url,
+    type: "website",
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Putera MY portfolio" }],
+  },
+  twitter: { card: "summary_large_image", title: "Putera MY", description: site.description, images: ["/opengraph-image"] },
+  robots: { index: true, follow: true },
   icons: { icon: "/icon.svg" },
-  robots: { index: true, follow: true }
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme:light)", color: "#FAF9FC" }, { media: "(prefers-color-scheme:dark)", color: "#0D0C13" }] };
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#0B0B1A" },
+    { media: "(prefers-color-scheme: light)", color: "#F8F7FF" },
+  ],
+};
+
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning><body className={inter.variable + " font-sans"}><ThemeProvider><LanguageProvider>
-    <a href="#main-content" className="sr-only fixed left-4 top-4 z-[100] rounded-lg bg-brand px-5 py-3 text-base font-semibold text-white focus:not-sr-only">Skip to content / Langkau ke kandungan</a>
-    {children}
-  </LanguageProvider></ThemeProvider></body></html>;
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: site.name,
+    url: site.url,
+    sameAs: [site.github, site.linkedin].filter(Boolean),
+    knowsAbout: ["Web development", "Cloud Computing", "IT support"],
+  };
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head><script dangerouslySetInnerHTML={{ __html: "(function(){try{var t=new URLSearchParams(location.search).get(\"theme\");if(t===\"light\"||t===\"dark\"){var e=document.documentElement;e.classList.remove(\"dark\",\"light\");e.classList.add(t);e.style.colorScheme=t===\"light\"?\"only light\":\"dark\";localStorage.setItem(\"putera-my-portfolio-theme\",t)}}catch(e){}})();" }} /></head>
+      <body className={`${inter.variable} ${jakarta.variable} ${mono.variable}`}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd).replace(/</g, "\\u003c") }} />
+        <Providers>
+          <a href="#main-content" className="skip-link">Skip to main content</a>
+          {children}
+        </Providers>
+      </body>
+    </html>
+  );
 }

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+<title id="title">VANTA FUN illustrative project preview</title><desc id="desc">Light violet and sky blue layout showing three entertainment modules, not a real screenshot</desc>
+<defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#F6F2FF"/><stop offset="1" stop-color="#E8F3FF"/></linearGradient><linearGradient id="card" x2="1" y2="1"><stop stop-color="#D1B7FF"/><stop offset="1" stop-color="#8FC5FE"/></linearGradient></defs>
+<rect width="1200" height="675" fill="url(#bg)"/><circle cx="1100" cy="-65" r="360" fill="#D4B0FF" opacity=".55"/><circle cx="70" cy="700" r="350" fill="#B6D8FF" opacity=".7"/>
+<rect x="75" y="70" width="1050" height="526" rx="25" fill="#FFFFFF" stroke="#D7CFEC" stroke-width="3"/><rect x="112" y="104" width="976" height="57" rx="15" fill="#F9F7FF"/><text x="146" y="141" font-family="Arial" font-weight="800" font-size="32" fill="#5E35B1">VANTA FUN</text><text x="775" y="139" font-family="Arial" font-size="19" fill="#7A7695">Characters</text><text x="914" y="139" font-family="Arial" font-size="19" fill="#7A7695">Jokes</text>
+<text x="134" y="245" font-family="Arial" font-weight="800" font-size="51" fill="#272039">Find something fun.</text><text x="136" y="283" font-family="Arial" font-size="20" fill="#777089">Characters, jokes and activities, all in one place.</text>
+<g><rect x="130" y="330" width="293" height="218" rx="17" fill="#EBE3FF"/><rect x="452" y="330" width="293" height="218" rx="17" fill="#D7EDFF"/><rect x="774" y="330" width="293" height="218" rx="17" fill="#E9E5FA"/></g>
+<g font-family="Arial" font-weight="800" font-size="25" fill="#2D2752"><text x="162" y="389">CHARACTERS</text><text x="484" y="389">JOKES</text><text x="808" y="389">ACTIVITIES</text></g>
+<g fill="#AFA0DA"><circle cx="230" cy="453" r="35"/><circle cx="315" cy="464" r="27"/><rect x="491" y="433" width="224" height="17" rx="8" fill="#A7C9F1"/><rect x="491" y="466" width="173" height="17" rx="8" fill="#B5D1F2"/><rect x="810" y="434" width="211" height="21" rx="9"/><rect x="810" y="470" width="163" height="21" rx="9"/></g>
+<text x="79" y="638" font-family="monospace" font-size="17" fill="#655A8A">ILLUSTRATIVE PREVIEW  /  ACTUAL SCREENSHOT TODO</text>
+</svg>

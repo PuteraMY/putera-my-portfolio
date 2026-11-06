@@ -1,11 +1,26 @@
-import Header from "@/components/Header";
-import Hero from "@/components/Hero";
-import Projects from "@/components/Projects";
-import Skills from "@/components/Skills";
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
-import BackToTop from "@/components/BackToTop";
-export default function HomePage() {
-  return <><Header/><main id="main-content"><Hero/><Projects/><Skills/><About/><Contact/></main><Footer/><BackToTop/></>;
+import { Header } from "@/components/sections/Header";
+import { Hero } from "@/components/sections/Hero";
+import { About } from "@/components/sections/About";
+import { Skills } from "@/components/sections/Skills";
+import { Projects } from "@/components/sections/Projects";
+import { Blog } from "@/components/sections/Blog";
+import { Contact } from "@/components/sections/Contact";
+import { Footer } from "@/components/sections/Footer";
+import { getCvHref } from "@/lib/cv";
+
+export default function Page() {
+  return (
+    <>
+      <Header />
+      <main id="main-content" tabIndex={-1}>
+        <Hero cvHref={getCvHref()} />
+        <About />
+        <Skills />
+        <Projects />
+        <Blog />
+        <Contact />
+      </main>
+      <Footer />
+    </>
+  );
 }
