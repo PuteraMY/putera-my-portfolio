@@ -8,6 +8,9 @@ export function CountUp({ value }: { value: number }) {
   const seen = useInView(ref, { once: true, amount: 0.3 });
   const reduced = useReducedMotion();
   const [shown, setShown] = useState(0);
+  // Server markup and first client paint must match, even with reduced motion.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!seen || reduced) return;
@@ -24,5 +27,5 @@ export function CountUp({ value }: { value: number }) {
     return () => cancelAnimationFrame(frame);
   }, [seen, reduced, value]);
 
-  return <span ref={ref} className="tabular-nums">{(reduced ? value : shown).toLocaleString("en-US")}</span>;
+  return <span ref={ref} className="tabular-nums">{(mounted && reduced ? value : shown).toLocaleString("en-US")}</span>;
 }
