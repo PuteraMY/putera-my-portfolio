@@ -1,18 +1,21 @@
 {
   "name": "putera-my-portfolio",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:browser": "node tests/browser.mjs"
+  },
+  "engines": {
+    "node": "22.x"
   },
   "dependencies": {
     "next": "16.4.5",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "framer-motion": "14.9.1",
     "next-themes": "0.4.6",
     "lucide-react": "1.69.0"
   },
@@ -21,9 +24,9 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "3.4.19",
     "postcss": "8.5.32",
-    "autoprefixer": "10.6.2"
-  },
-  "engines": { "node": "22.x" }
+    "autoprefixer": "10.6.2",
+    "@playwright/test": "1.56.1"
+  }
 }
