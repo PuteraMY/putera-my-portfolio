@@ -356,3 +356,59 @@ html.light, html.light body { color-scheme: only light; }
   .hero-title{letter-spacing:-.032em}
 }
 @media(max-width:389px){.header-actions > .theme-toggle{min-width:72px;padding-inline:6px}.brand-lockup{font-size:17px}}
+
+/* ANDROID LIGHT THEME PAINT GUARD
+   Some browser forced-dark implementations repaint transparent sections
+   without repainting their light-mode text. A CSS background image supplies
+   an explicit lavender surface rather than a transparent canvas.
+   Keep this after all theme and responsive rules. */
+html.light {
+  background-color: #F8F7FF;
+  color-scheme: only light !important;
+}
+html.dark {
+  background-color: #0B0B1A;
+  color-scheme: dark !important;
+}
+html.light body,
+html.light main,
+html.light .hero-section,
+html.light .about-section,
+html.light .skills-section,
+html.light .projects-section,
+html.light .blog-section,
+html.light .contact-section,
+html.light .case-header,
+html.light .case-body,
+html.light .site-footer {
+  background-color: #F8F7FF !important;
+  background-image: linear-gradient(#F8F7FF, #F8F7FF);
+  color-scheme: only light;
+}
+html.dark body,
+html.dark main,
+html.dark .hero-section,
+html.dark .about-section,
+html.dark .skills-section,
+html.dark .projects-section,
+html.dark .blog-section,
+html.dark .contact-section,
+html.dark .case-header,
+html.dark .case-body,
+html.dark .site-footer {
+  background-color: #0B0B1A;
+  background-image: none;
+  color-scheme: dark;
+}
+html.light .hero-section {
+  color: #161323;
+}
+html.light .hero-lead,
+html.light .case-intro,
+html.light .about-description {
+  color: #59546D;
+}
+/* Explicit light code-token colors: pale gold was unreadable on a white card. */
+html.light .floating-code .syntax-gold { color: #805100; }
+html.light .floating-code .syntax-violet { color: #6D28D9; }
+html.light .floating-code-body { color: #191329; }
