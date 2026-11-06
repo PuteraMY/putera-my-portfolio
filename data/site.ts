@@ -7,7 +7,7 @@ export const site = {
   githubUrl: "https://github.com/puteraaqmalputera-dot",
   linkedinUrl: "",
   cvUrl: "",
-  siteUrl: "",
+  siteUrl: "https://putera-my-portfolio.vercel.app",
   profileImage: "/images/putera.jpg",
 } as const;
 export const isEmailReady = site.email !== "your-email@example.com";
