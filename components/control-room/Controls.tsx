@@ -15,7 +15,9 @@ export function ControlProviders({children,cvHref}:{children:ReactNode;cvHref:st
  return <ThemeProvider attribute="class" defaultTheme="system" enableSystem storageKey="putera-control-room-theme" disableTransitionOnChange><ControlRuntime cvHref={cvHref}>{children}</ControlRuntime></ThemeProvider>;
 }
 function ControlRuntime({children,cvHref}:{children:ReactNode;cvHref:string|null}){
- const [open,setOpen]=useState(false);const [notice,setNotice]=useState("");const notifyTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
+ const [open,setOpen]=useState(false);const [notice,setNotice]=useState("");
+ useEffect(()=>{function sync(){document.documentElement.dataset.tabHidden=document.hidden?"true":"false"}sync();document.addEventListener("visibilitychange",sync);return()=>document.removeEventListener("visibilitychange",sync)},[]);
+ const notifyTimer=useRef<ReturnType<typeof setTimeout>|null>(null);
  const openPalette=useCallback(()=>setOpen(true),[]);const closePalette=useCallback(()=>setOpen(false),[]);
  const toast=useCallback((message:string)=>{setNotice(message);if(notifyTimer.current)clearTimeout(notifyTimer.current);notifyTimer.current=setTimeout(()=>setNotice(""),1700)},[]);
  useEffect(()=>()=>{if(notifyTimer.current)clearTimeout(notifyTimer.current)},[]);

@@ -50,6 +50,20 @@ for(const width of WIDTHS){
  assert.equal(errors.length,0,"Console errors at "+width+": "+errors.join(" | "));
  report.push({width,measured,consoleErrors:errors.length});await ctx.close();
 }
+// Exercise every published case-study route at every requested viewport.
+for(const width of WIDTHS){
+ const ctx=await browser.newContext({viewport:{width,height:900},colorScheme:"dark",reducedMotion:"reduce"});
+ const page=await ctx.newPage();const errors=[];
+ page.on("pageerror",e=>errors.push(e.message));
+ for(const slug of ["cinex","vanta-fun","nimbuscloud"]){
+  const response=await page.goto(ROOT+"/projects/"+slug,{waitUntil:"load"});
+  assert.equal(response?.status(),200,"Project route did not load: "+slug);
+  await page.evaluate(()=>document.fonts.ready);
+  await verify(page,"case "+slug+" "+width,width);
+ }
+ assert.equal(errors.length,0,"Case study console errors at "+width+": "+errors.join(" | "));
+ await ctx.close();
+}
 const context=await browser.newContext({viewport:{width:1280,height:900},colorScheme:"dark",reducedMotion:"reduce"});
 const page=await context.newPage();const exceptions=[];page.on("pageerror",e=>exceptions.push(e.message));
 await page.goto(ROOT+"/",{waitUntil:"load"});
