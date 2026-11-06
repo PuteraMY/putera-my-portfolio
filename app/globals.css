@@ -412,3 +412,84 @@ html.light .about-description {
 html.light .floating-code .syntax-gold { color: #805100; }
 html.light .floating-code .syntax-violet { color: #6D28D9; }
 html.light .floating-code-body { color: #191329; }
+
+/* Recruiter-first polish: consistent evidence cards and a tighter mobile hero. */
+.skill-evidence-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.skill-evidence-item { display: flex; gap: 12px; align-items: center; min-height: 65px; padding: 11px 13px; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); box-shadow: 0 5px 16px rgba(var(--shadow),.045); transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out); }
+.skill-evidence-item:hover { transform: translateY(-2px); border-color: var(--brand-strong); }
+.technology-icon { flex: 0 0 40px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); }
+.technology-html { color: #DC6231; }.technology-css { color: #1688B5; }
+.technology-js { color: #9B7900; }.technology-ts { color: #3178C6; }
+.technology-react { color: #167B9B; }.technology-vue { color: #209A69; }
+.technology-next, .technology-github, .technology-vercel { color: var(--ink); }
+.technology-api { color: var(--brand); }
+.skill-evidence-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.skill-evidence-text strong { font-size: 13px; font-weight: 800; }
+.skill-evidence-text small { color: var(--muted); font-size: 11px; line-height: 1.4; }
+.skill-column + .skill-column { border-left: 0; padding-left: 0; }
+.skill-group-heading { font: 700 12px var(--font-mono), monospace; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 13px; }
+.skills-note { max-width: 570px; line-height: 1.6; }
+.contact-feature { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; }
+.contact-feature h3 { font-size: clamp(18px,2vw,24px); line-height: 1.22; }
+.contact-feature > p { margin: 0; font-size: 13px; }
+.contact-project-link { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; margin-top: 5px; color: var(--brand); font-size: 13px; font-weight: 800; }
+.contact-project-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.contact-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact-message > p { max-width: 430px; }
+.contact-lines { overflow-wrap: anywhere; }
+.project-image-wrap { background: var(--surface-2); }
+.project-image { object-position: center top; }
+.hero-section { isolation: isolate; }
+html.light .hero-section::before { opacity: .12; }
+html.dark .hero-section::before { opacity: .18; }
+html.light .hero-tech .eyebrow { color: #292137; }
+.tech-tile { width: 42px; min-width: 42px; height: 42px; }
+html.light .tech-tile { background: #FFFFFF; }
+html.dark .tech-tile { background: var(--surface-2); }
+@media (max-width: 1023px) {
+  .skills-grid { gap: 17px; }
+}
+@media (max-width: 767px) {
+  .hero-grid { min-height: 0; gap: 6px; padding-block: 23px 4px; }
+  .hero-copy { padding: 3px 0 0; }
+  .hero-title { font-size: clamp(32px, 8.1vw, 43px); line-height: 1.09; margin-top: 17px; letter-spacing: -.042em; }
+  .hero-second-line { font-size: clamp(25px, 6.55vw, 32px); margin-top: 7px; line-height: 1.16; }
+  .hero-lead { margin-top: 15px; max-width: 500px; font-size: 14px; line-height: 1.62; }
+  .hero-ctas { margin-top: 19px; gap: 10px; }
+  .hero-ctas .btn { min-height: 45px; padding: 11px 15px; font-size: 12px; }
+  .hero-tech { margin-top: 23px; }
+  .tech-strip { flex-wrap: nowrap; gap: 7px; }
+  .tech-tile { min-width: 35px; width: 35px; height: 35px; border-radius: 8px; }
+  .tech-tile svg { width: 18px; height: 18px; }
+  .hero-visual { height: 236px; margin-top: 1px; }
+  .hero-halo { width: 69%; top: -12px; right: 11%; }
+  .laptop { top: 36px; width: 76%; left: 5%; height: 170px; }
+  .laptop-top { height: 168px; }
+  .floating-code { top: 65px; right: 0; width: 162px; }
+  .floating-code-body { padding: 8px; font-size: 7px; }
+  .laptop-bottom-label { bottom: 5px; }
+  .hero-bottom-rule { padding-block: 8px; }
+  .section-block { padding-block: 49px; }
+  .skills-section { padding-block: 44px 50px; }
+  .skills-grid { grid-template-columns: 1fr; gap: 26px; }
+  .skill-column { border: 0; padding: 0; }
+  .skill-column + .skill-column { padding: 0; border: 0; }
+  .skill-evidence-list { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .skill-evidence-item { min-height: 66px; padding: 10px; gap: 8px; }
+  .technology-icon { flex-basis: 34px; width: 34px; height: 34px; }
+  .technology-icon svg { width: 18px; height: 18px; }
+  .skill-evidence-text strong { font-size: 12px; }
+  .skill-evidence-text small { font-size: 10px; }
+  .contact-grid { gap: 22px; }
+  .contact-feature { padding: 20px; }
+  .project-image-wrap { aspect-ratio: 16/9; }
+}
+@media(max-width:389px) {
+  .hero-title { font-size: 32px; }
+  .hero-second-line { font-size: 25px; }
+  .hero-ctas .btn { font-size: 11px; padding-inline: 12px; }
+  .tech-strip { gap: 6px; }
+  .tech-tile { min-width: 34px; width: 34px; }
+  .skill-evidence-item { padding: 8px; }
+  .skill-evidence-text small { font-size: 9px; }
+}

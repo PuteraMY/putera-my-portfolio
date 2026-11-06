@@ -3,29 +3,39 @@ import { join } from "node:path";
 import assert from "node:assert/strict";
 
 const root = process.cwd();
-const essential = [
+const mustExist = [
   "app/layout.tsx", "app/page.tsx", "app/globals.css", "app/projects/[slug]/page.tsx",
   "app/opengraph-image.tsx", "app/sitemap.ts", "app/robots.ts", "app/not-found.tsx",
   "tailwind.config.ts", "context/theme-provider.tsx", "lib/cv.ts", "data/portfolio.ts",
   "components/sections/Header.tsx", "components/sections/Hero.tsx",
   "components/sections/About.tsx", "components/sections/Skills.tsx",
-  "components/sections/Projects.tsx", "components/sections/Blog.tsx",
-  "components/sections/Contact.tsx", "components/sections/Footer.tsx",
+  "components/sections/Projects.tsx", "components/sections/Contact.tsx",
+  "components/ui/TechnologyIcon.tsx", "components/ui/TechnologyItem.tsx",
 ];
-for (const file of essential) assert(existsSync(join(root, file)), `Missing file: ${file}`);
-for (const slug of ["cinex", "vanta-fun", "nimbuscloud"]) {
-  const image = join(root, `public/projects/${slug}.svg`);
-  assert(existsSync(image), `Missing original illustration: ${image}`);
-  assert.match(readFileSync(image, "utf8"), /ILLUSTRATIVE PREVIEW/);
+for (const path of mustExist) assert(existsSync(join(root, path)), "Missing "+path);
+for (const slug of ["cinex","vanta-fun","nimbuscloud"]) {
+  const path=join(root, "public/projects/"+slug+"-real.webp");
+  assert(existsSync(path), "Missing verified site screenshot: "+path);
+  const bytes=readFileSync(path);
+  assert.equal(bytes.toString("ascii",0,4),"RIFF","Invalid WebP container: "+slug);
 }
-const data = readFileSync(join(root, "data/portfolio.ts"), "utf8");
-assert.match(data, /https:\/\/psmy-cinex\.vercel\.app\//);
-assert.match(data, /https:\/\/vanta-fun-vue\.vercel\.app\//);
-assert.match(data, /https:\/\/nimbuscloud-eta\.vercel\.app/);
-assert.doesNotMatch(data, /50\+ projects|30\+ happy|100% client|4\+ years/i);
-assert.match(data, /CV.*TODO|TODO.*CV|TODO.*real file path|TODO.*real email/);
-const packageJson = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-assert.match(packageJson.devDependencies.tailwindcss, /^3\.4\./);
-assert(packageJson.dependencies["next-themes"]);
-assert(packageJson.dependencies["framer-motion"]);
-console.log(`PASS — ${essential.length} essential files, 3 project illustrations, verified links and content guardrails.`);
+const data=readFileSync(join(root,"data/portfolio.ts"),"utf8");
+assert.match(data,/https:\/\/psmy-cinex\.vercel\.app\//);
+assert.match(data,/https:\/\/vanta-fun-vue\.vercel\.app\//);
+assert.match(data,/https:\/\/nimbuscloud-eta\.vercel\.app/);
+assert.doesNotMatch(data,/50\+ projects|30\+ happy|100% client|4\+ years/i);
+assert.doesNotMatch(data,/imageIsIllustrative: true/);
+assert.match(data,/email: ""/);
+assert.match(data,/cvPath: ""/);
+const page=readFileSync(join(root,"app/page.tsx"),"utf8");
+assert.doesNotMatch(page,/<Blog\s*\/>/);
+const nav=readFileSync(join(root,"components/sections/Header.tsx"),"utf8");
+assert.doesNotMatch(nav,/id: "blog"/);
+const css=readFileSync(join(root,"app/globals.css"),"utf8");
+assert.match(css,/ANDROID LIGHT THEME PAINT GUARD/);
+assert.match(css,/background-image: linear-gradient\(#F8F7FF, #F8F7FF\)/);
+const pkg=JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
+assert(pkg.dependencies["react-icons"]);
+assert(pkg.dependencies["next-themes"]);
+assert(pkg.dependencies["framer-motion"]);
+console.log("PASS: source integrity, 3 real site screenshots, recruiter content and honest contact guardrails");

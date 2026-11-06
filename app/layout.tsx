@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Putera MY portfolio" }],
   },
   twitter: { card: "summary_large_image", title: "Putera MY", description: site.description, images: ["/opengraph-image"] },
-  robots: { index: true, follow: true },
+  robots: process.env.VERCEL_ENV === "production" ? { index: true, follow: true } : { index: false, follow: false },
   icons: { icon: "/icon.svg" },
 };
 

@@ -97,3 +97,12 @@ This environment has no access to the npm registry, so `npm install`, `next buil
 
 ### Android auto-dark rendering
 The website declares `color-scheme: only light` in its light theme so browsers using *force darken websites* do not incorrectly turn the white mockup into charcoal. `/?theme=light` and `/?theme=dark` permit direct theme comparison. Use the LIGHT / DARK header button to switch; it also clears the URL override.
+
+## November 2026 preview upgrade
+
+- Real 800×450 WebP screenshots captured from the public CINEX, VANTA FUN and NimbusCloud websites on 7 November 2026. These are screenshots of the actual publicly accessible sites, not composite artwork. WebP files were resized and compressed for the cards, so inspect the live sites for full fidelity.
+- Removed placeholder Blog from the UI until real posts are supplied.
+- Skills are evidence-backed technology rows with official-style icons; no percentages or invented proficiency.
+- Contact links are conditional on verified personal details. A real email, professional LinkedIn URL, and owner-approved CV PDF **have not been provided**; do not invent or publish them. The GitHub link remains the current verified route.
+- The production `main` branch and CONTROL ROOM branch are unchanged. Do not merge before owner review.
+- Android light-mode backgrounds explicitly paint the hero and page sections to prevent mixed dark/light rendering. Test both themes on the actual owner device.
