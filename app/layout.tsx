@@ -1,29 +1,13 @@
-import type { Metadata, Viewport } from "next";
-import type { ReactNode } from "react";
-import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/ThemeToggle";
-import { LanguageProvider } from "@/components/LanguageToggle";
-import { site } from "@/data/site";
+import type {Metadata,Viewport} from "next";
+import type {ReactNode} from "react";
+import {inter,interTight,mono} from "./fonts";
+import {AppProviders,SkipLink} from "@/components/Providers";
+import {site} from "@/data/site";
 import "./globals.css";
-const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
-const baseUrl = site.siteUrl || process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000");
-const description = "PUTERA MY — Front-End Developer with Cloud Computing & IT Support skills. Explore NimbusCloud and CINEX, projects built by Putera.";
-export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: "Putera MY | Front-End Developer, Cloud & IT Support",
-  description,
-  applicationName: "PUTERA MY Portfolio",
-  keywords: ["Putera MY", "Front-End Developer", "Cloud Computing", "IT Support", "NimbusCloud", "CINEX", "Next.js", "React", "TypeScript"],
-  alternates: { canonical: "/" },
-  openGraph: { type: "website", title: "Putera MY | Front-End Developer", description, siteName: "PUTERA MY", locale: "en_US", images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "PUTERA MY portfolio" }] },
-  twitter: { card: "summary_large_image", title: "Putera MY | Front-End Developer", description, images: ["/opengraph-image"] },
-  icons: { icon: "/icon.svg" },
-  robots: { index: true, follow: true }
-};
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: [{ media: "(prefers-color-scheme:light)", color: "#FAF9FC" }, { media: "(prefers-color-scheme:dark)", color: "#0D0C13" }] };
-export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
-  return <html lang="en" suppressHydrationWarning><body className={inter.variable + " font-sans"}><ThemeProvider><LanguageProvider>
-    <a href="#main-content" className="sr-only fixed left-4 top-4 z-[100] rounded-lg bg-brand px-5 py-3 text-base font-semibold text-white focus:not-sr-only">Skip to content / Langkau ke kandungan</a>
-    {children}
-  </LanguageProvider></ThemeProvider></body></html>;
+const description="Putera MY's portfolio: web applications, Cloud Computing projects, IT support, CINEX, AsetDesk and NimbusCloud.";
+export const metadata:Metadata={metadataBase:new URL(site.url),title:{default:"Putera MY | Web Developer & Cloud Computing",template:"%s | Putera MY"},description,applicationName:"Putera MY",keywords:["Putera MY","Web Development","Cloud Computing","IT Support","CINEX","AsetDesk","NimbusCloud"],alternates:{canonical:"/"},openGraph:{type:"website",url:site.url,siteName:"Putera MY",title:"Putera MY | Web Developer & Cloud Computing",description,images:[{url:"/opengraph-image",width:1200,height:630,alt:"Putera MY portfolio"}]},twitter:{card:"summary_large_image",title:"Putera MY",description,images:["/opengraph-image"]},robots:{index:true,follow:true},icons:{icon:"/icon.svg"}};
+export const viewport:Viewport={width:"device-width",initialScale:1,themeColor:[{media:"(prefers-color-scheme:light)",color:"#FFF9EE"},{media:"(prefers-color-scheme:dark)",color:"#0E1116"}]};
+export default function RootLayout({children}:{children:ReactNode}){
+ const structured={"@context":"https://schema.org","@type":"Person",name:site.name,alternateName:site.brand,url:site.url,description,sameAs:[site.github,site.linkedin].filter(Boolean),knowsAbout:["Web Development","Cloud Computing","IT Support","Next.js","TypeScript"]};
+ return <html lang="en" suppressHydrationWarning><body className={[inter.variable,interTight.variable,mono.variable].join(" ")}><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(structured).replace(/</g,"\\u003c")}}/><AppProviders><SkipLink/>{children}</AppProviders></body></html>;
 }
