@@ -11,7 +11,7 @@
 
 | Existing problem | CONTROL ROOM change |
 | --- | --- |
-| Mobile navbar cramped with Search, theme, language and hamburger | Small logo + large MENU; safe-area padding; no mobile Search icon. MENU launches a full-height searchable panel. |
+| Mobile navbar cramped with Search, theme, language and hamburger | Small logo + large MENU; safe-area padding; no mobile Search icon. Screenshot review also uncovered a custom button CSS specificity regression showing Ctrl/⌘K on mobile; now explicitly hidden at <=1050px with a regression assertion. |
 | Fixed round Back-to-Top button obscured page | Removed from the new pages. |
 | Headline began with “Hi, I'm” and included decorative P sidecard | “Putera MY.” in Inter Tight with a one-time yellow underline and a specific supporting sentence; no decorative card. |
 | Letter spacing as tight as -0.08em could overlap | Consistent -0.025em for main headings, -0.015em for monospace. |
@@ -49,8 +49,8 @@ WCAG contrast ratios computed from final CSS RGB tokens (ratios alone are not a 
 ## Verification
 
 - Next.js build and TypeScript: last intermediate Vercel deployment READY; rerun against final branch head.
-- Chromium checks at **360px, 390px, 768px, 1280px, 1920px**, in dark and light: **RUNNING / see GitHub Actions**.
-- Browser suite covers body overflow, hero width, menu/nav overlap, keyboard palette, Escape dismissal, theme, case-study routes, sitemap, disabled placeholder actions and console exceptions.
+- Chromium checks at **360px, 390px, 768px, 1280px, 1920px**, dark and light, plus all published case-study pages: **PASS (145 smoke checks in GitHub Actions run 42259711637)**. Final cleanup and mobile command-control fix are being re-verified.
+- Browser suite covers body overflow, hero width, menu/nav overlap, correct mobile action visibility, keyboard palette, Escape dismissal, theme, case-study routes, sitemap, disabled placeholder actions and console exceptions.
 - Manual visual review and real-device safe-area check: **PENDING**.
 - Independent WCAG audit and Lighthouse Performance / Accessibility / Best Practices / SEO 90+: **NOT MEASURED**.
 - GitHub Actions browser screenshots are review artifacts, not a substitute for user sign-off.
@@ -71,3 +71,6 @@ WCAG contrast ratios computed from final CSS RGB tokens (ratios alone are not a 
 ## Release gate
 
 Do not merge into main before production build, typecheck, responsive browser suite, owner visual review and final audit pass. CI success does not establish a Lighthouse 90+ score or full WCAG conformance.
+
+## Screenshot-based QA finding (post implementation)
+Chromium screenshots from the 390px and 1280px dark/light runs were visually reviewed. The first 390px captures showed a desktop shortcut pill beside MENU due to .cr-button overriding Tailwind's hidden utility. This was corrected with an explicit <=1050px selector and a browser regression assertion. Desktop and mobile screenshots are retained in the Actions artifact control-room-browser-shots.

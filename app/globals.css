@@ -173,3 +173,8 @@ main:focus{outline:none}
 .cr-logo{display:inline-flex;align-items:center;min-height:44px}
 .cr-proof a{min-height:44px}
 html[data-tab-hidden="true"] .cr-positive--pulse{animation-play-state:paused}
+
+/* Mobile QA regression fix: Tailwind .hidden must win over custom button display. */
+@media(max-width:1050px){
+ .cr-header__controls > button.cr-button{display:none!important}
+}

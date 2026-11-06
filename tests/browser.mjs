@@ -25,6 +25,7 @@ for(const width of WIDTHS){
  const measured=await verify(page,"dark "+width,width);
  if(width===390||width===1280)await page.screenshot({path:"test-results/control-room-"+width+"-dark.png",fullPage:true,animations:"disabled"});
  if(width<=1050){
+  assert.equal(await page.locator(".cr-header__controls > button.cr-button").isVisible(),false,"Desktop command control visible on mobile "+width);
   const menu=page.getByRole("button",{name:"Open menu and command palette"});
   assert.equal(await menu.isVisible(),true,"Mobile menu missing "+width);
   await menu.click();
