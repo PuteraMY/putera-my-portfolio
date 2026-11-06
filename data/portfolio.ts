@@ -30,11 +30,11 @@ export const site: Site = {
   url: "https://putera-my-portfolio.vercel.app",
   description:
     "Portfolio of Putera MY, a Computer Technology student focused on Cloud Computing, IT support and web development.",
-  headline: "I build things for the web.",
-  bio: "I'm a Computer Technology student focusing on Cloud Computing, IT support and practical web applications.",
+  headline: "I build useful things for the web.",
+  bio: "Computer Technology student focused on Cloud Computing, practical web apps and IT support. Here is work I can demonstrate and explain.",
   about:
-    "I work on web interfaces and explore the systems behind them. My portfolio includes entertainment discovery, interactive API-powered pages and cloud-inspired UI concepts.",
-  availability: "Open to internships and junior roles",
+    "I study Computer Technology with a Cloud Computing focus. I build responsive web interfaces, connect public APIs and explore how web apps are deployed and supported. The projects here are linked to demonstrable work.",
+  availability: "Exploring internship and junior opportunities",
   focusAreas: ["Web development", "Cloud Computing", "IT support"],
   github: "https://github.com/puteraaqmalputera-dot",
   linkedin: "", // TODO: Add verified LinkedIn profile URL.
@@ -50,18 +50,18 @@ export const projects: Project[] = [
     title: "CINEX",
     category: "Entertainment discovery app",
     description:
-      "A film, TV and anime discovery app with search, filters and a saved list. In active development.",
+      "A searchable TV, anime and film experience with ratings, genre filters and browser-saved favorites. In development.",
     problem:
       "Entertainment discovery often involves browsing across separate categories and services.",
     solution:
-      "CINEX brings title discovery, filtering and a saved-list experience into a single web app using Next.js and third-party APIs.",
-    features: ["Search titles", "Filter discovery results", "Save titles to a list"],
-    learnings: ["TODO: Add a verified technical challenge and what you learned while building CINEX."],
-    stack: ["Next.js", "TypeScript", "React", "APIs", "Vercel", "GitHub"],
+      "The Next.js interface combines discovery from public entertainment APIs with genre filtering, sorting, details and browser-saved favorites.",
+    features: ["TV, anime and film collections", "Search, genre filtering and sorting", "Local saved favorites", "Details drawn from external APIs"],
+    learnings: ["The Next.js interface normalizes data from several entertainment API schemas.", "A browser-saved list uses localStorage rather than requiring an account or database."],
+    stack: ["Next.js", "TypeScript", "React", "CSS", "APIs", "Vercel", "GitHub"],
     status: "in-development",
-    image: "/projects/cinex.svg",
-    imageAlt: "Illustrative purple film discovery interface for CINEX; not a real screenshot",
-    imageIsIllustrative: true,
+    image: "/projects/cinex-real.webp",
+    imageAlt: "Screenshot of the live CINEX discovery website captured 7 November 2026",
+    imageIsIllustrative: false,
     accent: "violet",
     liveUrl: "https://psmy-cinex.vercel.app/",
     sourceUrl: "https://github.com/puteraaqmalputera-dot/psmy-cinex-",
@@ -80,12 +80,12 @@ export const projects: Project[] = [
       "Discover jokes using JokeAPI",
       "Find activity ideas using the Bored API",
     ],
-    learnings: ["TODO: Add a verified lesson learned from the Vue assignment."],
-    stack: ["Vue 3", "Vite", "JavaScript", "CSS", "APIs", "Vercel", "GitHub"],
+    learnings: ["Vue reactive state coordinates content modules, search and filters.", "The source includes API error states and fallbacks for unavailable upstream services."],
+    stack: ["Vue 3", "Vite", "JavaScript", "HTML", "CSS", "APIs", "Vercel", "GitHub"],
     status: "live",
-    image: "/projects/vanta-fun.svg",
-    imageAlt: "Illustrative light entertainment interface for VANTA FUN; not a real screenshot",
-    imageIsIllustrative: true,
+    image: "/projects/vanta-fun-real.webp",
+    imageAlt: "Screenshot of the live VANTA FUN entertainment website captured 7 November 2026",
+    imageIsIllustrative: false,
     accent: "sky",
     liveUrl: "https://vanta-fun-vue.vercel.app/",
     sourceUrl: "https://github.com/puteraaqmalputera-dot/vanta-fun-vue",
@@ -100,40 +100,40 @@ export const projects: Project[] = [
     solution:
       "A landing page and dashboard simulation that explore the presentation of cloud hosting controls.",
     features: ["Cloud-themed landing page", "Interactive dashboard simulation", "Responsive interface"],
-    learnings: ["TODO: Add the actual implementation stack and a verified learning outcome."],
+    learnings: ["This public project is a dashboard and hosting UI simulation, not a real provisioning service.", "Infrastructure deployment, live billing and customer accounts are outside the scope of this concept."],
     stack: ["Responsive web", "UI design", "Vercel"],
     status: "live",
-    image: "/projects/nimbuscloud.svg",
-    imageAlt: "Illustrative dark analytics interface for NimbusCloud; not a real screenshot",
-    imageIsIllustrative: true,
+    image: "/projects/nimbuscloud-real.webp",
+    imageAlt: "Screenshot of the live NimbusCloud UI concept captured 7 November 2026",
+    imageIsIllustrative: false,
     accent: "teal",
     liveUrl: "https://nimbuscloud-eta.vercel.app",
     sourceUrl: "",
   },
 ];
 
-export type Skill = { label: string; symbol: string; swatch: string; category: string };
+export type Skill = {
+  label: string;
+  icon: "html" | "css" | "js" | "ts" | "react" | "next" | "vue" | "github" | "vercel" | "api";
+  category: "Web foundations" | "Frameworks" | "Workflow & deployment";
+  evidence: string;
+};
 export const skills: Skill[] = [
-  { label: "JavaScript", symbol: "JS", swatch: "#FACC15", category: "Web languages" },
-  { label: "TypeScript", symbol: "TS", swatch: "#3B82F6", category: "Web languages" },
-  { label: "CSS", symbol: "CSS", swatch: "#38BDF8", category: "Web languages" },
-  { label: "Next.js", symbol: "N", swatch: "#BFB4FF", category: "Frameworks" },
-  { label: "React", symbol: "R", swatch: "#5EEAD4", category: "Frameworks" },
-  { label: "Vue 3", symbol: "V", swatch: "#4ADE80", category: "Frameworks" },
-  { label: "Vercel", symbol: "▲", swatch: "#D4D4D8", category: "Tools & platforms" },
-  { label: "GitHub", symbol: "G", swatch: "#A78BFA", category: "Tools & platforms" },
-  { label: "APIs", symbol: "{ }", swatch: "#FB923C", category: "Tools & platforms" },
+  { label: "HTML", icon: "html", category: "Web foundations", evidence: "Markup in VANTA FUN" },
+  { label: "CSS", icon: "css", category: "Web foundations", evidence: "Responsive styling" },
+  { label: "JavaScript", icon: "js", category: "Web foundations", evidence: "VANTA FUN data flows" },
+  { label: "TypeScript", icon: "ts", category: "Web foundations", evidence: "CINEX data models" },
+  { label: "React", icon: "react", category: "Frameworks", evidence: "CINEX UI" },
+  { label: "Next.js", icon: "next", category: "Frameworks", evidence: "CINEX implementation" },
+  { label: "Vue 3", icon: "vue", category: "Frameworks", evidence: "VANTA FUN assignment" },
+  { label: "GitHub", icon: "github", category: "Workflow & deployment", evidence: "Public project source" },
+  { label: "Vercel", icon: "vercel", category: "Workflow & deployment", evidence: "Live project demos" },
+  { label: "REST APIs", icon: "api", category: "Workflow & deployment", evidence: "Public data integrations" },
 ];
-
-/** Project use is computed from published work, NOT a claimed proficiency score. */
-export const skillUsage = (skill: Skill) =>
-  projects.filter((p) => p.stack.includes(skill.label)).length;
-
 export const projectCounts = {
   featured: projects.length,
   live: projects.filter((p) => p.status === "live").length,
   active: projects.filter((p) => p.status === "in-development").length,
   areas: site.focusAreas.length,
 };
-
-export const isEmailConfigured = () => Boolean(site.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email));
+export const isEmailConfigured = () => Boolean(site.email && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(site.email));
