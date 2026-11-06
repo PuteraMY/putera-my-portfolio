@@ -1,12 +1,13 @@
-name: Portfolio checks
+name: Portfolio verification
 on:
   push:
-    branches: [main]
+    branches: [design/control-room]
   pull_request:
-    branches: [main]
+    branches: [main, design/putera-v2]
 jobs:
   verify:
     runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,3 +16,22 @@ jobs:
       - run: npm install --no-audit --no-fund
       - run: npm run build
       - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      - name: Start production server
+        run: |
+          npm run start -- --hostname 127.0.0.1 > /tmp/portfolio-server.log 2>&1 &
+          for attempt in $(seq 1 50); do
+            if curl --fail --silent http://127.0.0.1:3000/ > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/portfolio-server.log
+          exit 1
+      - name: Five-viewport browser smoke tests
+        run: npm run test:browser
+      - name: Upload review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: control-room-browser-shots
+          path: test-results/
+          if-no-files-found: ignore
