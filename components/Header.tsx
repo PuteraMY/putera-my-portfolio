@@ -1,68 +1,12 @@
 "use client";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useLanguage } from "./LanguageToggle";
-import LanguageToggle from "./LanguageToggle";
-import ThemeToggle from "./ThemeToggle";
-const sections = ["projects", "skills", "about", "contact"] as const;
-export default function Header() {
-  const { t } = useLanguage();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [active, setActive] = useState("");
-  const [progress, setProgress] = useState(0);
-  useEffect(() => {
-    let frame = 0;
-    const update = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const available = document.documentElement.scrollHeight - window.innerHeight;
-        setProgress(available > 0 ? Math.min(100, 100 * window.scrollY / available) : 0);
-        let current = "";
-        for (const id of sections) {
-          const element = document.getElementById(id);
-          if (element && element.getBoundingClientRect().top <= 170) current = id;
-        }
-        setActive(current);
-      });
-    };
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    return () => { cancelAnimationFrame(frame); window.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
-  }, []);
-  useEffect(() => {
-    if (!menuOpen) return;
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setMenuOpen(false); };
-    const onResize = () => { if (innerWidth >= 768) setMenuOpen(false); };
-    addEventListener("keydown", onKey);
-    addEventListener("resize", onResize);
-    return () => { removeEventListener("keydown", onKey); removeEventListener("resize", onResize); };
-  }, [menuOpen]);
-  const nav = [
-    { id: "projects", label: t.nav.projects },
-    { id: "skills", label: t.nav.skills },
-    { id: "about", label: t.nav.about },
-    { id: "contact", label: t.nav.contact }
-  ];
-  return <header className="sticky top-0 z-50 border-b border-neutral-200/80 bg-white/95 backdrop-blur-xl dark:border-white/10 dark:bg-[#111016]/95">
-    <div className="container-site flex h-[76px] items-center justify-between gap-3">
-      <a href="#top" className="flex shrink-0 items-center gap-2.5" aria-label="PUTERA MY — home" onClick={() => setMenuOpen(false)}>
-        <Image src="/images/putera-logo-f.svg" alt="" aria-hidden width={48} height={48} className="h-11 w-11 rounded-xl bg-[#F4EAFD] p-1.5 dark:bg-white" priority />
-        <span className="text-[16px] font-extrabold tracking-tight">PUTERA <span className="text-brand dark:text-[#CCA5FA]">MY</span><span className="text-brand">.</span></span>
-      </a>
-      <nav aria-label="Main navigation" className="hidden items-center gap-7 md:flex">
-        {nav.map(item => <a key={item.id} href={"#" + item.id} aria-current={active === item.id ? "location" : undefined} className={"text-sm font-semibold transition-colors hover:text-brand dark:hover:text-[#CCA5FA] " + (active === item.id ? "text-brand dark:text-[#CCA5FA]" : "text-[#50495C] dark:text-[#C7BFD0]")}>{item.label}</a>)}
-      </nav>
-      <div className="flex items-center gap-2">
-        <LanguageToggle /><ThemeToggle />
-        <a href="#contact" className="hidden min-h-11 items-center gap-2 rounded-xl bg-brand px-4 text-sm font-bold text-white hover:bg-brand-deep lg:inline-flex">{t.nav.contact}<ArrowUpRight aria-hidden size={17}/></a>
-        <button type="button" aria-controls="mobile-nav" aria-expanded={menuOpen} aria-label={menuOpen ? t.misc.close : t.misc.menu} className="icon-button md:hidden" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20}/> : <Menu size={20}/>}</button>
-      </div>
-    </div>
-    {menuOpen && <nav id="mobile-nav" aria-label="Mobile navigation" className="border-t border-neutral-200 bg-white p-4 dark:border-white/10 dark:bg-[#191520] md:hidden">
-      {nav.map(item => <a key={item.id} href={"#" + item.id} onClick={() => setMenuOpen(false)} className="block rounded-xl px-4 py-3 text-base font-semibold hover:bg-purple-50 dark:hover:bg-white/10">{item.label}</a>)}
-    </nav>}
-    <div aria-hidden className="absolute bottom-0 left-0 h-[3px] bg-brand dark:bg-brand-lime" style={{ width: progress + "%" }} />
-  </header>;
-}
+import {useEffect,useRef,useState,type KeyboardEvent} from "react";import Link from "next/link";import {usePathname} from "next/navigation";import {AnimatePresence,motion,useReducedMotion} from "framer-motion";import {Menu,X,Search,ArrowUpRight} from "lucide-react";import {useLanguage} from "./LanguageToggle";import LanguageToggle from "./LanguageToggle";import ThemeToggle from "./ThemeToggle";import ScrollProgress from "./ScrollProgress";import {useCommandPalette} from "./CommandPalette";import Tooltip from "./Tooltip";
+const ids=["projects","toolbox","about","contact"] as const;
+export default function Header(){const path=usePathname();const {t}=useLanguage();const {openPalette}=useCommandPalette();const reduced=useReducedMotion();const [menu,setMenu]=useState(false);const [active,setActive]=useState<string|null>(null);const menuRef=useRef<HTMLElement>(null);const openRef=useRef<HTMLButtonElement>(null);
+const items=[{id:"projects",label:t.nav.projects},{id:"toolbox",label:t.nav.toolbox},{id:"about",label:t.nav.about},{id:"contact",label:t.nav.contact}];
+useEffect(()=>{if(path!=="/"){setActive(null);return}let frame=0;function update(){cancelAnimationFrame(frame);frame=requestAnimationFrame(()=>{let selected:string|null=null;for(const id of ids){const el=document.getElementById(id);if(el&&el.getBoundingClientRect().top<=155)selected=id}setActive(selected)})}update();addEventListener("scroll",update,{passive:true});addEventListener("resize",update);return()=>{cancelAnimationFrame(frame);removeEventListener("scroll",update);removeEventListener("resize",update)}},[path]);
+useEffect(()=>{if(!menu)return;const prev=document.activeElement as HTMLElement;const overflow=document.body.style.overflow;document.body.style.overflow="hidden";const frame=requestAnimationFrame(()=>menuRef.current?.querySelector<HTMLElement>("button")?.focus());function onResize(){if(innerWidth>=1024)setMenu(false)}addEventListener("resize",onResize);return()=>{cancelAnimationFrame(frame);document.body.style.overflow=overflow;removeEventListener("resize",onResize);prev?.focus()}},[menu]);
+function trap(e:KeyboardEvent<HTMLElement>){if(e.key==="Escape"){e.preventDefault();setMenu(false);openRef.current?.focus();return}if(e.key!=="Tab")return;const all=menuRef.current?.querySelectorAll<HTMLElement>('a[href],button:not([disabled])');if(!all?.length)return;const first=all[0],last=all[all.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+const href=(id:string)=>path==="/"
+ ? "#"+id
+ : "/#"+id;
+return <><ScrollProgress/><header className="sticky top-0 z-[70] border-b border-hairline bg-bg"><div className="container-12 flex h-20 items-center justify-between gap-3"><Link href="/" aria-label="Putera MY" className="shrink-0 font-heading text-[26px] font-bold tracking-[-.045em]">Putera MY<span className="text-primary">.</span></Link><nav aria-label={t.nav.menu} className="hidden items-center gap-7 lg:flex">{items.map(i=><Link key={i.id} href={href(i.id)} aria-current={active===i.id?"location":undefined} className="relative flex min-h-12 items-center font-mono text-sm font-semibold hover:text-primary">{i.label}{active===i.id&&<motion.span layoutId="active-nav" aria-hidden="true" className="absolute bottom-0 left-0 right-0 h-[3px] rounded-full bg-primary" transition={{duration:reduced?0:.28}}/>}</Link>)}</nav><div className="flex shrink-0 items-center gap-2"><Tooltip label={t.command.title}><button type="button" className="icon-control gap-2" aria-label={t.ui.search} onClick={openPalette}><Search size={19}/><kbd className="hidden font-mono text-sm xl:inline">⌘ K</kbd></button></Tooltip><div className="hidden sm:block"><LanguageToggle/></div><div className="hidden sm:block"><ThemeToggle/></div><Link href={href("contact")} className="control control-primary hidden lg:inline-flex">{t.nav.contact}<ArrowUpRight size={18}/></Link><button ref={openRef} type="button" className="icon-control lg:hidden" aria-label={menu?t.nav.close:t.nav.menu} aria-controls="mobile-menu" aria-expanded={menu} onClick={()=>setMenu(v=>!v)}>{menu?<X size={21}/>:<Menu size={21}/>}</button></div></div><AnimatePresence>{menu&&<><motion.div aria-hidden="true" className="fixed inset-x-0 bottom-0 top-20 z-10 bg-[#14110F]/65" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={()=>setMenu(false)}/><motion.nav ref={menuRef} id="mobile-menu" aria-label={t.nav.menu} onKeyDown={trap} className="absolute inset-x-0 top-20 z-20 border-b-[1.5px] border-border bg-bg p-5 lg:hidden" initial={reduced?false:{opacity:0,y:-15}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-15}} transition={{duration:reduced?0:.28}}><div className="container-12 flex flex-col gap-2"><button type="button" onClick={()=>setMenu(false)} className="icon-control self-end gap-2 !px-4">{t.nav.close}<X size={17}/></button>{items.map((i,n)=><Link key={i.id} href={href(i.id)} onClick={()=>setMenu(false)} className="flex min-h-14 items-center justify-between border-b border-hairline py-3 font-heading text-2xl font-bold"><span><span className="mr-4 font-mono text-sm text-muted">0{n+1}</span>{i.label}</span><ArrowUpRight size={20}/></Link>)}<div className="flex items-center gap-3 pt-5 sm:hidden"><LanguageToggle/><ThemeToggle/></div></div></motion.nav></>}</AnimatePresence></header></>}
