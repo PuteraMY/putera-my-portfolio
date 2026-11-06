@@ -1,76 +1,29 @@
-export type Language = "en" | "bm";
-export const translations = {
-  en: {
-    nav: { projects:"Projects", skills:"Skills", about:"About", contact:"Contact" },
-    hero: {
-      eyebrow:"WELCOME TO MY PORTFOLIO", title:"I build thoughtful", emphasis:"digital experiences.",
-      intro:"I'm Putera, a Computer Technology student focusing on Cloud Computing. I build responsive web interfaces and bring practical front-end, cloud deployment and IT support skills to every project.",
-      view:"View projects", cv:"Download CV", cvPending:"CV coming soon",
-      availability:"OPEN TO INTERNSHIP & ENTRY-LEVEL OPPORTUNITIES", proof:"REAL PROJECTS. PRACTICAL SKILLS."
-    },
-    projects: {
-      eyebrow:"SELECTED WORK / 01", title:"Work that speaks for itself.", intro:"Working projects, clear problems and real technology—explore the results.",
-      featured:"FEATURED", all:"All", live:"Live", development:"In development", soon:"Coming soon",
-      view:"Visit website", source:"View code", details:"The problem", technologies:"Built with",
-      image:"Project preview", none:"No projects match this status."
-    },
-    skills: {
-      eyebrow:"EXPERTISE / 02", title:"A practical toolkit.",
-      intro:"A balance of front-end development and the systems that support reliable digital products.",
-      web:"Web Development", cloud:"Cloud & IT Support",
-      hardware:"Hardware troubleshooting", network:"Basic networking"
-    },
-    about: {
-      eyebrow:"ABOUT / 03", title:"Curious about technology. Focused on useful outcomes.",
-      p1:"I'm Putera, a Computer Technology student specialising in Cloud Computing.",
-      p2:"My work combines interface design, responsive development and practical troubleshooting.",
-      p3:"Through NimbusCloud and CINEX, I put ideas into usable web experiences, integrate external data and deploy working products.",
-      p4:"I'm looking for opportunities to contribute to a real team through an internship or entry-level role.",
-      profile:"PUTERA MY / PROFILE", photo:"Portrait of Putera"
-    },
-    contact: {
-      eyebrow:"CONTACT / 04", title:"Let's make something useful.",
-      intro:"If you're hiring an intern or junior developer, explore my work and get in touch.",
-      email:"Email me", github:"GitHub", linkedin:"LinkedIn", emailPending:"Email coming soon", linkedinPending:"LinkedIn coming soon"
-    },
-    footer:"Created by Putera MY",
-    misc:{top:"Back to top",language:"Switch language",theme:"Switch theme",menu:"Open menu",close:"Close menu",skip:"Skip to content"}
-  },
-  bm: {
-    nav: { projects:"Projek", skills:"Kemahiran", about:"Tentang Saya", contact:"Hubungi" },
-    hero: {
-      eyebrow:"SELAMAT DATANG KE PORTFOLIO", title:"Saya bina pengalaman", emphasis:"digital yang bermakna.",
-      intro:"Saya Putera, pelajar Teknologi Komputer dengan fokus Cloud Computing. Saya membina antaramuka web responsif dan mengaplikasikan kemahiran front-end, penerbitan awan serta sokongan IT.",
-      view:"Lihat projek", cv:"Muat turun CV", cvPending:"CV akan ditambah",
-      availability:"TERBUKA KEPADA LATIHAN INDUSTRI & KERJA PERINGKAT PERMULAAN", proof:"PROJEK SEBENAR. KEMAHIRAN PRAKTIKAL."
-    },
-    projects: {
-      eyebrow:"HASIL KERJA / 01", title:"Hasil kerja yang membuktikan kebolehan.", intro:"Projek berfungsi, masalah yang jelas dan teknologi sebenar—teroka hasilnya.",
-      featured:"PROJEK UTAMA", all:"Semua", live:"Aktif", development:"Dalam pembangunan", soon:"Akan datang",
-      view:"Buka website", source:"Lihat kod", details:"Masalah yang ditangani", technologies:"Teknologi",
-      image:"Pratonton projek", none:"Tiada projek untuk status ini."
-    },
-    skills: {
-      eyebrow:"KEMAHIRAN / 02", title:"Kemahiran untuk membina.",
-      intro:"Gabungan pembangunan front-end dengan asas sistem yang menyokong produk digital.",
-      web:"Pembangunan Web", cloud:"Cloud & Sokongan IT",
-      hardware:"Penyelesaian masalah perkakasan", network:"Asas rangkaian"
-    },
-    about: {
-      eyebrow:"TENTANG SAYA / 03", title:"Minat terhadap teknologi. Fokus pada hasil berguna.",
-      p1:"Saya Putera, pelajar Teknologi Komputer dengan pengkhususan Cloud Computing.",
-      p2:"Hasil kerja saya menggabungkan reka bentuk antaramuka, pembangunan responsif dan penyelesaian masalah praktikal.",
-      p3:"Melalui NimbusCloud dan CINEX, saya membina pengalaman web berguna, mengintegrasi data luaran serta menerbitkan produk yang berfungsi.",
-      p4:"Saya mencari peluang untuk menyumbang kepada pasukan sebenar melalui latihan industri atau jawatan peringkat permulaan.",
-      profile:"PUTERA MY / PROFIL", photo:"Gambar Putera"
-    },
-    contact: {
-      eyebrow:"HUBUNGI / 04", title:"Mari bina sesuatu yang berguna.",
-      intro:"Jika anda mencari pelatih industri atau pembangun junior, teroka hasil kerja saya dan hubungi saya.",
-      email:"Hantar e-mel", github:"GitHub", linkedin:"LinkedIn", emailPending:"E-mel akan ditambah", linkedinPending:"LinkedIn akan ditambah"
-    },
-    footer:"Dihasilkan oleh Putera MY",
-    misc:{top:"Kembali ke atas",language:"Tukar bahasa",theme:"Tukar tema",menu:"Buka menu",close:"Tutup menu",skip:"Langkau ke kandungan"}
-  }
-} as const;
-export type Dictionary = typeof translations.en;
+import type {Language} from "./site";
+export const translations={
+ en:{
+ nav:{projects:"Projects",toolbox:"Toolbox",about:"About",contact:"Contact",menu:"Menu",close:"Close menu"},
+ hero:{eyebrow:"PUTERA MY / DEVELOPER PORTFOLIO",greeting:"Hi, I'm",intro:"I'm a Computer Technology student focusing on Cloud Computing. I build web apps, explore cloud systems and solve practical IT problems.",view:"View projects",cv:"Download CV",cvPending:"CV coming soon",clock:"Malaysia, MYT",roles:"Current focus"},
+ projects:{eyebrow:"01 / SELECTED WORK",title:"Things I've built.",intro:"Real projects. Clear problems. Working interfaces.",case:"Read case study",live:"Live site",code:"Source code",all:"All projects",status:{live:"Live","in-development":"In development","coming-soon":"Coming soon"}},
+ toolbox:{eyebrow:"02 / TOOLBOX",title:"Tools I work with.",intro:"A practical toolkit across web development, cloud platforms and IT support.",web:"Web development",cloud:"Cloud & IT support",daily:"Daily",learning:"Learning"},
+ about:{eyebrow:"03 / ABOUT",title:"An engineer's mindset. A builder's curiosity.",paragraphs:["I'm Putera, a Computer Technology student focusing on Cloud Computing.","I build interfaces that are clear to use and straightforward to maintain.","My projects combine web development, cloud tools and practical problem-solving.","I'm interested in internships and junior roles where I can contribute to real products and teams."],study:"Studying",studyValue:"Computer Technology",focus:"Focus",focusValue:"Cloud Computing",work:"Building",workValue:"Web apps & IT systems",photo:"Portrait of Putera"},
+ contact:{eyebrow:"04 / LET'S TALK",title:"Let's build something.",intro:"Have an internship, junior role or project in mind? I'd be glad to hear about it.",copy:"Copy email",pending:"Email coming soon",cv:"Download CV",linkedInPending:"LinkedIn coming soon"},
+ study:{back:"All projects",role:"Role",timeframe:"Timeframe",stack:"Stack",status:"Status",problem:"The problem",approach:"The approach",features:"Key features",challenges:"Challenges and what I learned",result:"Result",built:"Built so far",next:"What's next",gallery:"Project gallery",empty:"Screenshots will be added here.",nextProject:"Next project",open:"Open screenshot",close:"Close image viewer",previous:"Previous image",following:"Next image"},
+ command:{title:"Quick navigation",placeholder:"Search projects, pages and actions...",sections:"Sections",projects:"Projects",actions:"Actions",theme:"Toggle theme",language:"Switch language",copy:"Copy email",cv:"Download CV",empty:"No matching commands",navigate:"Navigate",select:"Select",close:"Close"},
+ ui:{theme:"Switch theme",language:"Switch language",top:"Back to top",loading:"Working...",copied:"Copied",unavailable:"Unavailable",skip:"Skip to main content",close:"Close",search:"Search",emailCopied:"Email copied",emailFailed:"Unable to copy email",cvReady:"CV download started",cvFailed:"CV is unavailable"},
+ footer:"Created by Putera MY",
+ notFound:{title:"This page isn't here.",text:"The page may have moved or the link may be incorrect.",home:"Back to homepage"}
+ },
+ bm:{
+ nav:{projects:"Projek",toolbox:"Kemahiran",about:"Tentang saya",contact:"Hubungi",menu:"Menu",close:"Tutup menu"},
+ hero:{eyebrow:"PUTERA MY / PORTFOLIO PEMBANGUN",greeting:"Hai, saya",intro:"Saya pelajar Teknologi Komputer dengan fokus Cloud Computing. Saya membina aplikasi web, meneroka sistem awan dan menyelesaikan masalah IT secara praktikal.",view:"Lihat projek",cv:"Muat turun CV",cvPending:"CV akan ditambah",clock:"Malaysia, MYT",roles:"Fokus semasa"},
+ projects:{eyebrow:"01 / HASIL KERJA",title:"Hasil kerja saya.",intro:"Projek sebenar. Masalah yang jelas. Antaramuka yang berfungsi.",case:"Baca kajian kes",live:"Laman aktif",code:"Kod sumber",all:"Semua projek",status:{live:"Aktif","in-development":"Dalam pembangunan","coming-soon":"Akan datang"}},
+ toolbox:{eyebrow:"02 / KEMAHIRAN",title:"Alat dan kemahiran saya.",intro:"Gabungan pembangunan web, platform awan dan sokongan IT.",web:"Pembangunan web",cloud:"Cloud & sokongan IT",daily:"Harian",learning:"Dipelajari"},
+ about:{eyebrow:"03 / TENTANG SAYA",title:"Pemikiran jurutera. Rasa ingin tahu seorang pembina.",paragraphs:["Saya Putera, pelajar Teknologi Komputer yang memfokuskan Cloud Computing.","Saya membina antaramuka yang mudah digunakan dan diselenggara.","Projek saya menggabungkan pembangunan web, teknologi awan dan penyelesaian masalah praktikal.","Saya mencari peluang latihan industri dan jawatan junior untuk menyumbang kepada produk serta pasukan sebenar."],study:"Pengajian",studyValue:"Teknologi Komputer",focus:"Fokus",focusValue:"Cloud Computing",work:"Membina",workValue:"Aplikasi web & sistem IT",photo:"Gambar Putera"},
+ contact:{eyebrow:"04 / HUBUNGI SAYA",title:"Mari bina sesuatu.",intro:"Ada peluang latihan industri, jawatan junior atau projek? Saya sedia berbincang.",copy:"Salin e-mel",pending:"E-mel akan ditambah",cv:"Muat turun CV",linkedInPending:"LinkedIn akan ditambah"},
+ study:{back:"Semua projek",role:"Peranan",timeframe:"Tempoh",stack:"Teknologi",status:"Status",problem:"Masalah",approach:"Pendekatan",features:"Fungsi utama",challenges:"Cabaran dan perkara yang dipelajari",result:"Hasil",built:"Sudah dibina",next:"Langkah seterusnya",gallery:"Galeri projek",empty:"Screenshot akan ditambah di sini.",nextProject:"Projek seterusnya",open:"Buka screenshot",close:"Tutup paparan gambar",previous:"Gambar sebelumnya",following:"Gambar seterusnya"},
+ command:{title:"Navigasi pantas",placeholder:"Cari projek, seksyen dan tindakan...",sections:"Seksyen",projects:"Projek",actions:"Tindakan",theme:"Tukar tema",language:"Tukar bahasa",copy:"Salin e-mel",cv:"Muat turun CV",empty:"Tiada padanan",navigate:"Navigasi",select:"Pilih",close:"Tutup"},
+ ui:{theme:"Tukar tema",language:"Tukar bahasa",top:"Kembali ke atas",loading:"Sedang diproses...",copied:"Disalin",unavailable:"Belum tersedia",skip:"Langkau ke kandungan utama",close:"Tutup",search:"Cari",emailCopied:"E-mel disalin",emailFailed:"Tidak dapat salin e-mel",cvReady:"Muat turun CV dimulakan",cvFailed:"CV belum tersedia"},
+ footer:"Dihasilkan oleh Putera MY",
+ notFound:{title:"Halaman ini tiada.",text:"Halaman mungkin telah dipindahkan atau pautan tidak tepat.",home:"Kembali ke halaman utama"}
+ }};
+export const getDictionary=(l:Language)=>translations[l];
