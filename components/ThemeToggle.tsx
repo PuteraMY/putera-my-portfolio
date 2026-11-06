@@ -1,17 +1,5 @@
-"use client";
-import { useEffect, useState, type ReactNode } from "react";
-import { Moon, Sun, Monitor } from "lucide-react";
-import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
-import { useLanguage } from "./LanguageToggle";
-export function ThemeProvider({ children }: { children: ReactNode }) {
-  return <NextThemesProvider attribute="class" defaultTheme="system" storageKey="putera-my-theme" enableSystem disableTransitionOnChange>{children}</NextThemesProvider>;
-}
-export default function ThemeToggle() {
-  const [ready, setReady] = useState(false);
-  const { resolvedTheme, theme, setTheme } = useTheme();
-  const { t } = useLanguage();
-  useEffect(() => setReady(true), []);
-  if (!ready) return <span aria-hidden="true" className="icon-button"><Monitor size={18} /></span>;
-  const icon = resolvedTheme === "dark" ? <Moon size={19} aria-hidden /> : <Sun size={19} aria-hidden />;
-  return <button type="button" className="icon-button" title={t.misc.theme} aria-label={t.misc.theme} aria-pressed={theme === "dark"} onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}>{icon}</button>;
-}
+"use client";import {useEffect,useRef,useState} from "react";import {flushSync} from "react-dom";import {motion,useReducedMotion} from "framer-motion";import {Sun,Moon} from "lucide-react";import {useTheme} from "next-themes";import {useLanguage} from "./LanguageToggle";
+type ViewDoc=Document&{startViewTransition?:(fn:()=>void)=>{ready:Promise<void>}};
+export default function ThemeToggle(){const {theme,setTheme}=useTheme();const {t}=useLanguage();const [mounted,setMounted]=useState(false);const ref=useRef<HTMLButtonElement>(null);const reduced=useReducedMotion();useEffect(()=>setMounted(true),[]);const dark=mounted&&theme==="dark";
+function toggle(){const next=dark?"light":"dark";const d=document as ViewDoc;const btn=ref.current;if(reduced||!d.startViewTransition||!btn){setTheme(next);return}const rect=btn.getBoundingClientRect();const x=rect.left+rect.width/2,y=rect.top+rect.height/2;const radius=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));try{const view=d.startViewTransition(()=>flushSync(()=>setTheme(next)));void view.ready.then(()=>{document.documentElement.animate({clipPath:["circle(0px at "+x+"px "+y+"px)","circle("+radius+"px at "+x+"px "+y+"px)"]},{duration:500,easing:"cubic-bezier(.16,1,.3,1)",pseudoElement:"::view-transition-new(root)"} as KeyframeAnimationOptions)}).catch(()=>{})}catch{setTheme(next)}}
+return <><style>{"::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}::view-transition-new(root){z-index:1}"}</style><button type="button" ref={ref} disabled={!mounted} className="icon-control relative !w-[68px]" aria-label={t.ui.theme} aria-pressed={dark} onClick={toggle}><motion.span aria-hidden="true" animate={{x:dark?8:-8,rotate:dark?10:0}} transition={reduced?{duration:0}:{type:"spring",stiffness:520,damping:27}} className="flex h-7 w-7 items-center justify-center rounded-full bg-surface-2">{dark?<Moon size={18}/>:<Sun size={18}/>}</motion.span><span className="sr-only" aria-live="polite">{dark?"Dark":"Light"}</span></button></>}
