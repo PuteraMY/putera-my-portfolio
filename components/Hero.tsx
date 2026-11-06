@@ -1,5 +1,5 @@
 "use client";
-import { ArrowDownRight, ArrowRight, Download, Github, Linkedin, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, Download, GitBranch, BriefcaseBusiness, Sparkles } from "lucide-react";
 import { site } from "@/data/site";
 import { useLanguage } from "./LanguageToggle";
 import ScrollReveal from "./ScrollReveal";
@@ -18,8 +18,8 @@ export default function Hero() {
           {site.cvUrl ? <a className="button-secondary" href={site.cvUrl} download><Download size={19} aria-hidden />{t.hero.cv}</a> : <span className="button-secondary cursor-default opacity-65" aria-label={t.hero.cvPending}><Download size={18} aria-hidden />{t.hero.cvPending}</span>}
         </div>
         <div className="mt-8 flex items-center gap-3">
-          <a className="icon-button" aria-label="GitHub" href={site.githubUrl} target="_blank" rel="noopener noreferrer"><Github size={20}/></a>
-          {site.linkedinUrl && <a className="icon-button" aria-label="LinkedIn" href={site.linkedinUrl} target="_blank" rel="noopener noreferrer"><Linkedin size={20}/></a>}
+          <a className="icon-button" aria-label="GitHub" href={site.githubUrl} target="_blank" rel="noopener noreferrer"><GitBranch size={20}/></a>
+          {site.linkedinUrl && <a className="icon-button" aria-label="LinkedIn" href={site.linkedinUrl} target="_blank" rel="noopener noreferrer"><BriefcaseBusiness size={20}/></a>}
           <a href="#projects" className="ml-3 inline-flex items-center gap-2 text-sm font-semibold text-[#565164] hover:text-brand dark:text-[#C5BDCF]">{t.hero.proof}<ArrowDownRight size={17} aria-hidden /></a>
         </div>
       </ScrollReveal>

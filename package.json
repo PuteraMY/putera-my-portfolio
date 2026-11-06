@@ -25,5 +25,5 @@
     "postcss": "8.5.32",
     "autoprefixer": "10.6.2"
   },
-  "engines": { "node": ">=22" }
+  "engines": { "node": "22.x" }
 }

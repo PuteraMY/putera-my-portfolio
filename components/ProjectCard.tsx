@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowUpRight, CheckCircle2, Clock3, CircleDashed, Cloud, Clapperboard, Layers3, Github } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Clock3, CircleDashed, Cloud, Clapperboard, Layers3, GitBranch } from "lucide-react";
 import type { Project, ProjectStatus } from "@/data/projects";
 import { useLanguage } from "./LanguageToggle";
 const statusIcons = { live: CheckCircle2, "in-development": CircleDashed, "coming-soon": Clock3 };
@@ -28,7 +28,7 @@ export default function ProjectCard({ project, index = 0 }: { project: Project; 
       <details className="mt-6 border-t border-neutral-200 pt-5 dark:border-white/10"><summary className="cursor-pointer text-base font-semibold text-brand dark:text-[#CCA5FA]">{t.projects.details}</summary><p className="mt-3 rounded-xl bg-[#F6F2FA] p-4 text-base leading-8 text-[#51495C] dark:bg-white/5 dark:text-[#D6CBE1]">{project.problem[language]}</p></details>
       {(project.liveUrl || project.repoUrl) && <div className="mt-auto flex flex-wrap gap-3 pt-7">
         {project.liveUrl && <a className="button-primary" href={project.liveUrl} target="_blank" rel="noopener noreferrer">{t.projects.view}<ArrowUpRight size={17} aria-hidden /></a>}
-        {project.repoUrl && <a className="button-secondary" href={project.repoUrl} target="_blank" rel="noopener noreferrer"><Github size={18} aria-hidden />{t.projects.source}</a>}
+        {project.repoUrl && <a className="button-secondary" href={project.repoUrl} target="_blank" rel="noopener noreferrer"><GitBranch size={18} aria-hidden />{t.projects.source}</a>}
       </div>}
     </div>
   </article>;
