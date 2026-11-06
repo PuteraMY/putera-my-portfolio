@@ -6,16 +6,18 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { site } from "@/data/portfolio";
+import { TechnologyIcon } from "@/components/ui/TechnologyIcon";
+import type { Skill } from "@/data/portfolio";
 
-const strip = [
-  { name: "HTML", color: "#F97316", display: "5" },
-  { name: "CSS", color: "#38BDF8", display: "3" },
-  { name: "JavaScript", color: "#FACC15", display: "JS" },
-  { name: "TypeScript", color: "#60A5FA", display: "TS" },
-  { name: "Vue", color: "#4ADE80", display: "V" },
-  { name: "Next.js", color: "#C4B5FD", display: "N" },
-  { name: "GitHub", color: "#FB7185", display: "G" },
-];
+const strip: { name: string; icon: Skill["icon"]; color: string }[] = [
+  { name: "HTML", icon: "html", color: "#E76E38" },
+  { name: "CSS", icon: "css", color: "#39A7DD" },
+  { name: "JavaScript", icon: "js", color: "#D1A600" },
+  { name: "TypeScript", icon: "ts", color: "#4A97DC" },
+  { name: "Vue 3", icon: "vue", color: "#36AD77" },
+  { name: "Next.js", icon: "next", color: "var(--ink)" },
+  { name: "GitHub", icon: "github", color: "var(--ink)" },
+]
 
 function LaptopVisual() {
   return (
@@ -80,7 +82,7 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
           <motion.div {...anim(0.39)} className="hero-tech">
             <p className="eyebrow">TECHNOLOGIES I WORK WITH</p>
             <div className="tech-strip" aria-label="Technologies represented in published projects">
-              {strip.map((s) => <span key={s.name} title={s.name} aria-label={s.name} className="tech-tile" style={{ color: s.color }}>{s.display}</span>)}
+              {strip.map((s) => <span key={s.name} title={s.name} aria-label={s.name} className="tech-tile" style={{ color: s.color }}><TechnologyIcon name={s.icon} size={20} /></span>)}
             </div>
           </motion.div>
         </div>

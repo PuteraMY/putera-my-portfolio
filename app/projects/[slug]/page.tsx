@@ -55,17 +55,17 @@ export default async function ProjectCaseStudy({ params }: Props) {
             <dl className="case-facts">
               <div><dt>STATUS</dt><dd>{project.status === "live" ? "Live" : "In development"}</dd></div>
               <div><dt>TECH STACK</dt><dd>{project.stack.slice(0, 4).join(" · ")}</dd></div>
-              <div><dt>PERSONAL ROLE / DATE</dt><dd>TODO: Confirm responsibilities and dates</dd></div>
+              <div><dt>EVIDENCE</dt><dd>{project.sourceUrl ? "Public source + demo" : "Live UI concept demo"}</dd></div>
             </dl>
             <figure>
               <div className="case-cover"><Image src={project.image} alt={project.imageAlt} fill sizes="(max-width: 768px) 100vw, 1100px" priority /></div>
-              <figcaption className="case-illustration-note">Illustrative preview, not a captured screenshot. TODO: Add a real screenshot of {project.title}.</figcaption>
+              <figcaption className="case-illustration-note">{project.imageIsIllustrative ? "Conceptual artwork" : "Actual screenshot of the publicly accessible project website, captured 7 November 2026."}</figcaption>
             </figure>
             <div className="case-body">
               <section className="case-section"><span className="eyebrow">01 / PROBLEM</span><div><h2>Problem</h2><p>{project.problem}</p></div></section>
               <section className="case-section"><span className="eyebrow">02 / APPROACH</span><div><h2>What I built</h2><p>{project.solution}</p><ul>{project.features.map((f) => <li key={f}>{f}</li>)}</ul></div></section>
               <section className="case-section"><span className="eyebrow">03 / TOOLS</span><div><h2>Stack</h2><p>{project.stack.join(" · ")}</p></div></section>
-              <section className="case-section"><span className="eyebrow">04 / LEARNINGS</span><div><h2>What I learned</h2><ul>{project.learnings.map((lesson) => <li key={lesson}>{lesson}</li>)}</ul></div></section>
+              <section className="case-section"><span className="eyebrow">04 / ENGINEERING NOTES</span><div><h2>Technical observations</h2><ul>{project.learnings.map((lesson) => <li key={lesson}>{lesson}</li>)}</ul></div></section>
               <section className="case-section"><span className="eyebrow">05 / NEXT</span><div><h2>Links</h2><p>{project.status === "in-development" ? "This project is still in development. The live link points to its public preview." : "Explore the public project and available source."}</p><div className="case-buttons">{project.liveUrl && <LinkButton external href={project.liveUrl}>Open live site <ArrowUpRight size={18} /></LinkButton>}{project.sourceUrl && <LinkButton external variant="secondary" href={project.sourceUrl}>Open source <ExternalLink size={18} /></LinkButton>}</div></div></section>
             </div>
           </div>
