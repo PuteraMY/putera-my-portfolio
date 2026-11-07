@@ -685,8 +685,6 @@ html.dark .theme-toggle-symbol {
 @media (prefers-reduced-motion: reduce) {
   .theme-toggle-symbol,
   .theme-toggle-animated[data-switching="true"]::after { animation: none !important; }
-  html.theme-soft-swap body,
-  html.theme-soft-swap .site-header { transition: none !important; }
 }
 
 

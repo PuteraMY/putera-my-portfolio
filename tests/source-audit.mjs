@@ -59,7 +59,7 @@ assert.match(toggle,/setTheme\(next\)/);
 assert.doesNotMatch(toggle,/daynight-track/);
 assert.doesNotMatch(toggle,/theme-wipe-layer/);
 assert.match(projectsUI,/selected=\{active === index\}/);
-assert.match(css,/VISUAL FIX V6/);
+assert.match(css,/Mobile card and aurora refinements/);
 assert.match(css,/mobile-aurora-breathe/);
 assert.match(css,/V8 — smoother V5-style circular theme reveal/);
 assert.match(css,/theme-circle-grow/);
