@@ -2,19 +2,16 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 
-type TransitionController = { finished: Promise<void> };
-type TransitionDocument = Document & {
-  startViewTransition?: (update: () => void) => TransitionController;
+type ThemeTransition = { finished: Promise<void> };
+type TransitionCapableDocument = Document & {
+  startViewTransition?: (update: () => void) => ThemeTransition;
 };
 
 /**
- * Day/Night Switch.
- *
- * Browser snapshots move the complete NEW page across the OLD page without
- * mixing foreground colors and surfaces. This avoids the gray, low-contrast
- * intermediate frames visible in the previous Android recording.
+ * V5-inspired circle reveal: CSS animates the COMPLETE new-theme snapshot,
+ * not individual text/background colors. No washout, overlay or page swipe.
  */
 export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -27,12 +24,20 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
     if (requested === "dark" || requested === "light") setTheme(requested);
   }, [setTheme]);
 
-  function switchTheme() {
+  function switchTheme(event: MouseEvent<HTMLButtonElement>) {
     if (switching.current) return;
     const next = resolvedTheme === "dark" ? "light" : "dark";
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = Math.round(bounds.left + bounds.width / 2);
+    const y = Math.round(bounds.top + bounds.height / 2);
+    const radius = Math.ceil(Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    )) + 16;
 
+    // Remove only the temporary preview theme override. Preserve the share link.
     try {
       const url = new URL(window.location.href);
       if (url.searchParams.has("theme")) {
@@ -40,39 +45,47 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
         window.history.replaceState(null, "", url.pathname + url.search + url.hash);
       }
     } catch {
-      // Theme changes must not depend on browser history permission.
+      // Theme switching still works when History API access is unavailable.
     }
 
     const apply = () => {
-      // Apply the complete palette together before the new frame is captured.
       root.classList.toggle("light", next === "light");
       root.classList.toggle("dark", next === "dark");
       root.style.colorScheme = next === "light" ? "only light" : "dark";
       setTheme(next);
     };
 
-    const doc = document as TransitionDocument;
-
-    // No View Transition API: instant correct theme plus the sliding switch.
-    // An abrupt but readable switch is preferable to an unreadable gray fade.
+    const doc = document as TransitionCapableDocument;
     if (reduced || typeof doc.startViewTransition !== "function") {
+      // Never produce a low-contrast intermediate frame on older browsers.
+      // The icon rotates smoothly even when the page snapshot API is absent.
       apply();
       return;
     }
 
     switching.current = true;
-    root.classList.add("theme-slide-active");
-    const finish = () => {
-      root.classList.remove("theme-slide-active");
+    const button = event.currentTarget;
+    button.setAttribute("data-switching", "true");
+    root.style.setProperty("--theme-reveal-x", x + "px");
+    root.style.setProperty("--theme-reveal-y", y + "px");
+    root.style.setProperty("--theme-reveal-radius", radius + "px");
+    root.classList.add("theme-circle-active");
+
+    const complete = () => {
+      root.classList.remove("theme-circle-active");
+      root.style.removeProperty("--theme-reveal-x");
+      root.style.removeProperty("--theme-reveal-y");
+      root.style.removeProperty("--theme-reveal-radius");
+      button.removeAttribute("data-switching");
       switching.current = false;
     };
 
     try {
       const transition = doc.startViewTransition(() => apply());
-      transition.finished.then(finish, finish);
+      transition.finished.then(complete, complete);
     } catch {
       apply();
-      finish();
+      complete();
     }
   }
 
@@ -82,16 +95,14 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   return (
     <button
       type="button"
-      className={"theme-toggle theme-toggle-animated theme-toggle-slider" + (inMenu ? " theme-toggle-menu" : "")}
+      className={"theme-toggle theme-toggle-animated" + (inMenu ? " theme-toggle-menu" : "")}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={dark}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={switchTheme}
     >
-      <span className={"daynight-track" + (dark ? " is-night" : " is-day")} aria-hidden="true">
-        <span className="daynight-thumb">
-          {dark ? <Moon size={13} strokeWidth={2.3} /> : <Sun size={13} strokeWidth={2.3} />}
-        </span>
+      <span className="theme-toggle-symbol" key={dark ? "sun" : "moon"} aria-hidden="true">
+        {dark ? <Sun size={17} strokeWidth={2} /> : <Moon size={17} strokeWidth={2} />}
       </span>
       <span className="theme-toggle-word">{dark ? "LIGHT" : "DARK"}</span>
     </button>

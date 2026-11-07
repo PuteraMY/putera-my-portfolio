@@ -957,157 +957,38 @@ html.dark .theme-toggle-animated[data-switching="true"] {
 }
 
 
-/* V6.1: crossfade actual content alongside the visible translucent circular ripple.
-   Keep the SVG background canvas in the layout in both themes so its opacity
-   can animate instead of abruptly switching display:none/display:block. */
-.light-theme-canvas,
-html.light .light-theme-canvas,
-html.dark .light-theme-canvas {
-  display: block;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-html.dark .light-theme-canvas { opacity: 0; }
-html.light .light-theme-canvas { opacity: 1; }
-html.theme-animating .light-theme-canvas {
-  transition: opacity 680ms cubic-bezier(.45,0,.2,1);
-}
-html.theme-animating,
-html.theme-animating body,
-html.theme-animating .site-header,
-html.theme-animating .brand-lockup,
-html.theme-animating .nav-link,
-html.theme-animating .hero-title,
-html.theme-animating .hero-lead,
-html.theme-animating .hero-availability,
-html.theme-animating .hero-tech .eyebrow,
-html.theme-animating .section-title,
-html.theme-animating .section-description,
-html.theme-animating .skills-note,
-html.theme-animating .skill-evidence-item,
-html.theme-animating .skill-evidence-text,
-html.theme-animating .skill-evidence-text small,
-html.theme-animating .tech-tile,
-html.theme-animating .fact-card,
-html.theme-animating .fact-icon,
-html.theme-animating .project-card,
-html.theme-animating .project-content,
-html.theme-animating .project-description,
-html.theme-animating .contact-feature,
-html.theme-animating .contact-message,
-html.theme-animating .contact-social,
-html.theme-animating .site-footer,
-html.theme-animating .btn,
-html.theme-animating .theme-toggle,
-html.theme-animating .mobile-drawer,
-html.theme-animating .floating-code {
-  transition-property: color, background-color, border-color, box-shadow;
-  transition-duration: 680ms;
-  transition-timing-function: cubic-bezier(.45,0,.2,1);
-}
-@media (prefers-reduced-motion: reduce) {
-  html.theme-animating, html.theme-animating *,
-  html.theme-animating .light-theme-canvas {
-    transition: none !important;
-  }
-}
-
-
-/* V7: Day/Night horizontal page-swipe (fully rendered screenshots).
-   Old and new palettes never mix per pixel, avoiding unreadable gray text.
-   This replaces the V6.1 translucent veil and global color crossfade. */
-html.theme-slide-active::view-transition-old(root),
-html.theme-slide-active::view-transition-new(root) {
+/* V8 — smoother V5-style circular theme reveal.
+   The old & new snapshots remain fully legible; only a composite clip-path
+   moves across the screen. No animated intermediate theme colors. */
+html.theme-circle-active::view-transition-old(root),
+html.theme-circle-active::view-transition-new(root) {
   animation: none !important;
   mix-blend-mode: normal !important;
 }
-html.theme-slide-active::view-transition-old(root) {
-  z-index: 1;
-}
-html.theme-slide-active::view-transition-new(root) {
+html.theme-circle-active::view-transition-old(root) { z-index: 1; }
+html.theme-circle-active::view-transition-new(root) {
   z-index: 2;
-  animation: daynight-page-swipe 550ms cubic-bezier(.2,.78,.2,1) both !important;
-  box-shadow: -15px 0 40px rgba(16, 8, 35, .22);
+  animation: theme-circle-grow 720ms cubic-bezier(.24,.78,.25,1) both !important;
 }
-@keyframes daynight-page-swipe {
-  from { transform: translate3d(100%,0,0); }
-  to { transform: translate3d(0,0,0); }
+@keyframes theme-circle-grow {
+  from { clip-path: circle(0px at var(--theme-reveal-x) var(--theme-reveal-y)); }
+  to { clip-path: circle(var(--theme-reveal-radius) at var(--theme-reveal-x) var(--theme-reveal-y)); }
 }
-/* Interactive toggle: a real sun/moon slider that moves in either theme. */
-.theme-toggle-slider {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 44px;
-  padding: 0 10px;
-  border-radius: 12px;
+.theme-toggle-animated .theme-toggle-symbol {
+  transform-origin: center;
+  animation: v8-icon-turn 450ms cubic-bezier(.16,1,.3,1) both;
 }
-.daynight-track {
-  position: relative;
-  flex: 0 0 43px;
-  display: block;
-  width: 43px;
-  height: 24px;
-  border-radius: 999px;
-  border: 1px solid rgba(121,75,208,.34);
-  background: linear-gradient(120deg, #E4D6FF, #F6ECFF);
-  box-shadow: inset 0 1px 3px rgba(78,41,139,.08);
-  transition: background-color .3s ease, border-color .3s ease;
+@keyframes v8-icon-turn {
+  from { opacity: .65; transform: rotate(-38deg) scale(.8); }
+  65% { opacity: 1; transform: rotate(7deg) scale(1.04); }
+  to { opacity: 1; transform: rotate(0deg) scale(1); }
 }
-.daynight-track.is-night {
-  border-color: #7965BD;
-  background: linear-gradient(120deg, #281D52, #4B3282);
+.theme-toggle-animated[data-switching="true"] {
+  border-color: var(--brand-strong);
+  box-shadow: 0 0 0 3px rgba(124,58,237,.12);
 }
-.daynight-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  display: grid;
-  place-items: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: #FFFFFF;
-  color: #6D28D9;
-  box-shadow: 0 2px 5px rgba(26,14,51,.23);
-  transform: translate3d(0,0,0);
-  transition: transform 420ms cubic-bezier(.22,1.15,.35,1), color 250ms ease, background-color 250ms ease;
-}
-.daynight-track.is-night .daynight-thumb {
-  transform: translate3d(18px,0,0);
-  color: #2F2350;
-  background: #FACC15;
-}
-.theme-toggle-slider .theme-toggle-word {
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: .035em;
-}
-.theme-toggle-slider:hover { transform: translateY(-1px); }
-.theme-toggle-slider:active { transform: scale(.98); }
-/* Keep transitions confined to the slider, never crossfade page text. */
-@media (max-width:767px) {
-  .header-actions > .theme-toggle-slider {
-    min-width: 95px;
-    padding: 0 7px;
-    gap: 5px;
-  }
-  .header-actions > .theme-toggle-slider .theme-toggle-word {
-    font-size: 10px;
-  }
-  .theme-toggle-slider .daynight-track { flex-basis: 39px; width:39px; height:23px; }
-  .theme-toggle-slider .daynight-thumb { width:17px; height:17px; }
-  .theme-toggle-slider .daynight-track.is-night .daynight-thumb { transform: translate3d(16px,0,0); }
-}
-@media (max-width:359px) {
-  .header-actions > .theme-toggle-slider { min-width:88px; padding-inline:6px; }
-  .theme-toggle-slider .daynight-track { flex-basis:35px; width:35px; }
-  .theme-toggle-slider .daynight-track.is-night .daynight-thumb { transform: translate3d(12px,0,0); }
-}
-@media (prefers-reduced-motion:reduce) {
-  html.theme-slide-active::view-transition-old(root),
-  html.theme-slide-active::view-transition-new(root) { animation:none !important; }
-  .theme-toggle-slider .daynight-thumb { transition:none !important; }
+@media (prefers-reduced-motion: reduce) {
+  html.theme-circle-active::view-transition-old(root),
+  html.theme-circle-active::view-transition-new(root),
+  .theme-toggle-animated .theme-toggle-symbol { animation: none !important; }
 }

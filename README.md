@@ -140,3 +140,7 @@ The reveal is now translucent and takes 680 ms, with 160 ms for the ripple to di
 
 The previous circular ripple + page color crossfade briefly produced poor contrast and visibly faded titles on mobile. That approach has been replaced with a horizontal swipe between two complete browser-rendered page snapshots (550 ms, GPU transform), which prevents partial palette mixing. The sun/moon icon now travels on a compact slider track. On browsers without the same-document View Transitions API, the theme changes immediately and the slider still animates; for reduced motion both change immediately. The original dark/light palette, project graphics, Android light canvas and query overrides remain preserved.
 
+
+### V8 Theme transition: V5 design, refined
+
+Based on feedback comparing V5 and V7, the site restores V5's original compact sun/moon button and circular reveal. Rather than animating a page-wide color crossfade (which produced unreadable gray text on Android), the same-document View Transitions API now animates the **complete** new page snapshot with a CSS clip-path circle centered on the pressed toggle. Timing uses 720 ms easing for a less abrupt acceleration/deceleration, and the keyed icon morph is 450 ms. Unsupported browsers retain the original V5 icon motion and an immediate, fully readable palette swap. Reduced-motion users get an instant transition. No fullscreen overlays or horizontal page-slide.
