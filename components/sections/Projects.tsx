@@ -9,7 +9,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
 import { projects, type Project } from "@/data/portfolio";
 
-function ProjectCard({ project, index }: { project: Project; index: number }) {
+function ProjectCard({ project, index, selected }: { project: Project; index: number; selected: boolean }) {
   const reduce = useReducedMotion();
   const tiltFrame = useRef<number | null>(null);
 
@@ -42,7 +42,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
   return (
     <motion.article
-      className={`project-card project-${project.accent}`}
+      className={`project-card project-${project.accent} ${selected ? "is-current" : ""}`}
       onPointerMove={onCardMove}
       onPointerLeave={onCardLeave}
       initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -93,13 +93,14 @@ export function Projects() {
     <section id="projects" className="section-block projects-section" aria-labelledby="projects-heading">
       <div className="page-container">
         <SectionHeading centered eyebrow="FEATURED PROJECTS" id="projects-heading">Some of My Recent Work</SectionHeading>
+        <p className="project-mobile-prompt"><ArrowLeftRight size={16} aria-hidden="true" /> SWIPE THE CARDS TO EXPLORE</p>
         <div className="projects-carousel" ref={scrollRef} onScroll={onScroll} role="region" aria-roledescription="carousel" aria-label="Featured projects carousel" aria-describedby="project-swipe-hint" tabIndex={0}
           onKeyDown={(event) => {
             if (event.target !== event.currentTarget) return;
             if (event.key === "ArrowRight") { event.preventDefault(); goTo(Math.min(active + 1, projects.length - 1)); }
             if (event.key === "ArrowLeft") { event.preventDefault(); goTo(Math.max(active - 1, 0)); }
           }}>
-          {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} />)}
+          {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} selected={active === index} />)}
         </div>
         <p className="project-swipe-hint" id="project-swipe-hint"><ArrowLeftRight size={15} aria-hidden="true" /> Swipe to explore <span className="project-swipe-count">0{active + 1} / 0{projects.length}</span></p>
         <div className="project-controls">

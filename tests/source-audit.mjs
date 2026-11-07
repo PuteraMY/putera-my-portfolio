@@ -49,4 +49,14 @@ assert.match(skillsUI,/<Reveal className="skill-column"/);
 assert.match(css,/Aurora Interaction v5/);
 assert.match(css,/prefers-reduced-motion:reduce/);
 assert.match(css,/case-enter/);
-console.log("PASS: source integrity, verified screenshots, premium UI interactions and reduced-motion guardrails");
+
+const toggle=readFileSync(join(root,"components/ui/ThemeToggle.tsx"),"utf8");
+assert.match(toggle,/theme-wipe-layer/);
+assert.match(toggle,/await reveal.finished/);
+assert.match(toggle,/prefers-reduced-motion: reduce/);
+assert.match(toggle,/setTheme\(next\)/);
+assert.match(projectsUI,/selected=\{active === index\}/);
+assert.match(css,/VISUAL FIX V6/);
+assert.match(css,/mobile-aurora-breathe/);
+assert.doesNotMatch(css,/--tilt-x:\s*0deg/);
+console.log("PASS: source integrity, verified screenshots, cross-browser theme wipe, functional pointer tilt and visible mobile motion");

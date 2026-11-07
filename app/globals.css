@@ -780,11 +780,8 @@ html.light .hero-section {
 
 /* Spatial project previews: 2.5-degree maximum tilt and a subtle pointer glow. */
 .project-image-wrap {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
-  --glow-x: 50%;
-  --glow-y: 50%;
-  transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
+  /* Inherit live pointer values from the parent card instead of shadowing them. */
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
   transform-origin: center;
   transition: transform 270ms cubic-bezier(.16, 1, .3, 1);
 }
@@ -795,7 +792,7 @@ html.light .hero-section {
   z-index: 1;
   pointer-events: none;
   opacity: 0;
-  background: radial-gradient(circle at var(--glow-x) var(--glow-y), rgba(255,255,255,.24), transparent 48%);
+  background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(255,255,255,.24), transparent 48%);
   transition: opacity 240ms ease-out;
 }
 .project-number { z-index: 2; }
@@ -863,4 +860,98 @@ a.btn:focus-visible, .project-cover-link:focus-visible, .project-text-link:focus
   .hero-section::after, .case-header, .case-facts, .case-cover, .case-illustration-note { animation: none !important; }
   .project-image-wrap, .project-image-wrap::after, .btn-primary::before { transition: none !important; animation: none !important; }
   .project-image-wrap { transform: none !important; }
+}
+
+
+/* VISUAL FIX V6 — visible mobile motion + cross-browser DAY/NIGHT wipe.
+   Main content is never reflowed; all major movement is transform/opacity. */
+.theme-wipe-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  pointer-events: none;
+  contain: paint;
+  isolation: isolate;
+  will-change: clip-path, opacity;
+}
+.theme-wipe-layer > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.theme-wipe-halo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 220px at var(--wipe-x) var(--wipe-y), var(--wipe-accent), transparent 88%);
+}
+.theme-toggle-animated[data-switching="true"] {
+  box-shadow: 0 0 0 3px rgba(124,58,237,.16), 0 0 20px rgba(124,58,237,.12);
+}
+html.dark .theme-toggle-animated[data-switching="true"] {
+  box-shadow: 0 0 0 3px rgba(250,204,21,.15), 0 0 20px rgba(250,204,21,.10);
+}
+.project-mobile-prompt {
+  display: none;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  font: 750 10px var(--font-mono), monospace;
+  letter-spacing: .055em;
+  margin: 12px 0 -8px;
+}
+@media (max-width: 767px) {
+  .project-mobile-prompt { display: flex; }
+  .project-card.is-current {
+    border-color: var(--brand-strong);
+    box-shadow: 0 12px 28px rgba(var(--shadow), .19);
+  }
+  .project-card.is-current .project-cover-cue {
+    border-color: rgba(220,196,255,.55);
+  }
+  .project-card:not(.is-current) .project-image { filter: saturate(.88); }
+  .project-card.is-current .project-image { filter: saturate(1.07); }
+  .project-image { transition: transform 450ms var(--ease-out), filter 350ms ease-out; }
+  .hero-section {
+    --aurora-a: rgba(121,70,235,.30);
+    --aurora-b: rgba(218,120,241,.22);
+  }
+  html.light .hero-section {
+    --aurora-a: rgba(167,99,240,.19);
+    --aurora-b: rgba(195,144,255,.15);
+  }
+  .hero-section::after {
+    opacity: .78;
+    background:
+      radial-gradient(ellipse 76% 43% at 70% 28%, var(--aurora-a), transparent 91%),
+      radial-gradient(ellipse 78% 47% at 38% 80%, var(--aurora-b), transparent 93%);
+  }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .hero-section::after {
+    animation: mobile-aurora-breathe 8.2s ease-in-out infinite alternate;
+  }
+  .project-card.is-current .project-cover-cue {
+    animation: current-card-cue 400ms cubic-bezier(.16,1,.3,1) both;
+  }
+  .project-mobile-prompt svg { animation: mobile-swipe-guide 2.7s ease-in-out infinite; }
+}
+@keyframes mobile-aurora-breathe {
+  from { opacity: .48; transform: translate3d(-3%,2%,0) scale(.96); }
+  to { opacity: .91; transform: translate3d(3%,-2%,0) scale(1.045); }
+}
+@keyframes current-card-cue {
+  from { transform: translateY(6px); opacity: .5; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes mobile-swipe-guide {
+  0%,100% { transform: translateX(-3px); }
+  50% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-section::after, .project-mobile-prompt svg, .project-card.is-current .project-cover-cue {
+    animation: none !important;
+  }
 }
