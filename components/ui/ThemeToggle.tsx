@@ -82,6 +82,8 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
     surface.setAttribute("width", "100%");
     surface.setAttribute("height", "100%");
     surface.setAttribute("fill", next === "dark" ? "#0B0B1A" : "#F8F7FF");
+    // A translucent wave keeps real page content visible during the sweep.
+    surface.setAttribute("fill-opacity", ".22");
     svg.appendChild(surface);
     layer.appendChild(svg);
     const halo = document.createElement("span");
@@ -99,6 +101,12 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
     activeLayer.current = layer;
     document.body.appendChild(layer);
 
+    // First register transitions against the OLD color values and flush once.
+    // next-themes must not disable transitions during this intentional change.
+    root.classList.add("theme-animating");
+    void document.body.offsetWidth;
+    applyOnce();
+
     const animateWipe = async () => {
       try {
         // WAAPI works on current Android Chrome and most modern WebViews.
@@ -109,32 +117,31 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
               { clipPath: `circle(0px at ${x}px ${y}px)` },
               { clipPath: `circle(${radius}px at ${x}px ${y}px)` },
             ],
-            { duration: 540, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" },
+            { duration: 680, easing: "cubic-bezier(0.45, 0, 0.20, 1)", fill: "forwards" },
           );
           await reveal.finished;
-          applyOnce();
           const fade = layer.animate(
             [{ opacity: 1 }, { opacity: 0 }],
-            { duration: 240, easing: "ease-out", fill: "forwards" },
+            { duration: 160, easing: "ease-out", fill: "forwards" },
           );
           await fade.finished;
         } else {
-          layer.style.transition = "clip-path 540ms cubic-bezier(.22,1,.36,1), opacity 240ms ease-out";
+          layer.style.transition = "clip-path 680ms cubic-bezier(.45,0,.20,1), opacity 160ms ease-out";
           await new Promise<void>((done) => {
             requestAnimationFrame(() => {
               layer.style.clipPath = `circle(${radius}px at ${x}px ${y}px)`;
-              window.setTimeout(done, 570);
+              window.setTimeout(done, 705);
             });
           });
-          applyOnce();
           layer.style.opacity = "0";
-          await new Promise<void>((done) => window.setTimeout(done, 250));
+          await new Promise<void>((done) => window.setTimeout(done, 170));
         }
       } catch {
         applyOnce();
       } finally {
         applyOnce();
         layer.remove();
+        root.classList.remove("theme-animating");
         if (activeLayer.current === layer) activeLayer.current = null;
         switching.current = false;
         button.removeAttribute("data-switching");

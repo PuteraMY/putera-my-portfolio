@@ -955,3 +955,61 @@ html.dark .theme-toggle-animated[data-switching="true"] {
     animation: none !important;
   }
 }
+
+
+/* V6.1: crossfade actual content alongside the visible translucent circular ripple.
+   Keep the SVG background canvas in the layout in both themes so its opacity
+   can animate instead of abruptly switching display:none/display:block. */
+.light-theme-canvas,
+html.light .light-theme-canvas,
+html.dark .light-theme-canvas {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+html.dark .light-theme-canvas { opacity: 0; }
+html.light .light-theme-canvas { opacity: 1; }
+html.theme-animating .light-theme-canvas {
+  transition: opacity 680ms cubic-bezier(.45,0,.2,1);
+}
+html.theme-animating,
+html.theme-animating body,
+html.theme-animating .site-header,
+html.theme-animating .brand-lockup,
+html.theme-animating .nav-link,
+html.theme-animating .hero-title,
+html.theme-animating .hero-lead,
+html.theme-animating .hero-availability,
+html.theme-animating .hero-tech .eyebrow,
+html.theme-animating .section-title,
+html.theme-animating .section-description,
+html.theme-animating .skills-note,
+html.theme-animating .skill-evidence-item,
+html.theme-animating .skill-evidence-text,
+html.theme-animating .skill-evidence-text small,
+html.theme-animating .tech-tile,
+html.theme-animating .fact-card,
+html.theme-animating .fact-icon,
+html.theme-animating .project-card,
+html.theme-animating .project-content,
+html.theme-animating .project-description,
+html.theme-animating .contact-feature,
+html.theme-animating .contact-message,
+html.theme-animating .contact-social,
+html.theme-animating .site-footer,
+html.theme-animating .btn,
+html.theme-animating .theme-toggle,
+html.theme-animating .mobile-drawer,
+html.theme-animating .floating-code {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: 680ms;
+  transition-timing-function: cubic-bezier(.45,0,.2,1);
+}
+@media (prefers-reduced-motion: reduce) {
+  html.theme-animating, html.theme-animating *,
+  html.theme-animating .light-theme-canvas {
+    transition: none !important;
+  }
+}

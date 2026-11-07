@@ -131,3 +131,7 @@ The light/dark control triggers a 570 ms circular View Transition from the press
 The old View Transitions API implementation often gave an abrupt, barely visible theme change on Android. V6 replaces it with a self-contained, animated SVG-backed circular wipe from the theme button (540 ms reveal + 240 ms veil fade), including in browsers without View Transitions API. The SVG painted surface preserves white in Chrome forced-dark configurations. If Web Animations API is absent it uses CSS transitions. Repeated taps are guarded, and reduced-motion users get an immediate theme change.
 
 The V5 desktop 3D tilt CSS had accidentally shadowed the position variables set by the parent card. The parent values now inherit correctly. On touch devices, the aurora has a visible yet restrained drift, the active project card is highlighted while swiping, and the swipe instruction is placed above the cards. No device relies on mouse hover to understand the controls.
+
+### V6.1 refinement: no blank-screen wipe
+
+The reveal is now translucent and takes 680 ms, with 160 ms for the ripple to disappear. The entire page crossfades its real text, surfaces and light-mode SVG canvas at the same time. `next-themes` no longer globally disables transitions during an intentional toggle. A reduced-motion preference still applies the change instantly. This is specifically designed to look like a meaningful smooth transition on Android rather than a solid overlay blanking the content.

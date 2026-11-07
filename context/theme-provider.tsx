@@ -10,7 +10,7 @@ export function Providers({ children }: { children: ReactNode }) {
       defaultTheme="system"
       enableSystem
       enableColorScheme={false}
-      disableTransitionOnChange
+      disableTransitionOnChange={false}
       storageKey="putera-my-portfolio-theme"
     >
       {children}
