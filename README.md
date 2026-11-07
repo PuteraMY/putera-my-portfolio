@@ -135,3 +135,8 @@ The V5 desktop 3D tilt CSS had accidentally shadowed the position variables set 
 ### V6.1 refinement: no blank-screen wipe
 
 The reveal is now translucent and takes 680 ms, with 160 ms for the ripple to disappear. The entire page crossfades its real text, surfaces and light-mode SVG canvas at the same time. `next-themes` no longer globally disables transitions during an intentional toggle. A reduced-motion preference still applies the change instantly. This is specifically designed to look like a meaningful smooth transition on Android rather than a solid overlay blanking the content.
+
+### V7 Day/Night switch — revised after real Android screen recording
+
+The previous circular ripple + page color crossfade briefly produced poor contrast and visibly faded titles on mobile. That approach has been replaced with a horizontal swipe between two complete browser-rendered page snapshots (550 ms, GPU transform), which prevents partial palette mixing. The sun/moon icon now travels on a compact slider track. On browsers without the same-document View Transitions API, the theme changes immediately and the slider still animates; for reduced motion both change immediately. The original dark/light palette, project graphics, Android light canvas and query overrides remain preserved.
+

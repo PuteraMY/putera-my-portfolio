@@ -1013,3 +1013,101 @@ html.theme-animating .floating-code {
     transition: none !important;
   }
 }
+
+
+/* V7: Day/Night horizontal page-swipe (fully rendered screenshots).
+   Old and new palettes never mix per pixel, avoiding unreadable gray text.
+   This replaces the V6.1 translucent veil and global color crossfade. */
+html.theme-slide-active::view-transition-old(root),
+html.theme-slide-active::view-transition-new(root) {
+  animation: none !important;
+  mix-blend-mode: normal !important;
+}
+html.theme-slide-active::view-transition-old(root) {
+  z-index: 1;
+}
+html.theme-slide-active::view-transition-new(root) {
+  z-index: 2;
+  animation: daynight-page-swipe 550ms cubic-bezier(.2,.78,.2,1) both !important;
+  box-shadow: -15px 0 40px rgba(16, 8, 35, .22);
+}
+@keyframes daynight-page-swipe {
+  from { transform: translate3d(100%,0,0); }
+  to { transform: translate3d(0,0,0); }
+}
+/* Interactive toggle: a real sun/moon slider that moves in either theme. */
+.theme-toggle-slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 10px;
+  border-radius: 12px;
+}
+.daynight-track {
+  position: relative;
+  flex: 0 0 43px;
+  display: block;
+  width: 43px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(121,75,208,.34);
+  background: linear-gradient(120deg, #E4D6FF, #F6ECFF);
+  box-shadow: inset 0 1px 3px rgba(78,41,139,.08);
+  transition: background-color .3s ease, border-color .3s ease;
+}
+.daynight-track.is-night {
+  border-color: #7965BD;
+  background: linear-gradient(120deg, #281D52, #4B3282);
+}
+.daynight-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #6D28D9;
+  box-shadow: 0 2px 5px rgba(26,14,51,.23);
+  transform: translate3d(0,0,0);
+  transition: transform 420ms cubic-bezier(.22,1.15,.35,1), color 250ms ease, background-color 250ms ease;
+}
+.daynight-track.is-night .daynight-thumb {
+  transform: translate3d(18px,0,0);
+  color: #2F2350;
+  background: #FACC15;
+}
+.theme-toggle-slider .theme-toggle-word {
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .035em;
+}
+.theme-toggle-slider:hover { transform: translateY(-1px); }
+.theme-toggle-slider:active { transform: scale(.98); }
+/* Keep transitions confined to the slider, never crossfade page text. */
+@media (max-width:767px) {
+  .header-actions > .theme-toggle-slider {
+    min-width: 95px;
+    padding: 0 7px;
+    gap: 5px;
+  }
+  .header-actions > .theme-toggle-slider .theme-toggle-word {
+    font-size: 10px;
+  }
+  .theme-toggle-slider .daynight-track { flex-basis: 39px; width:39px; height:23px; }
+  .theme-toggle-slider .daynight-thumb { width:17px; height:17px; }
+  .theme-toggle-slider .daynight-track.is-night .daynight-thumb { transform: translate3d(16px,0,0); }
+}
+@media (max-width:359px) {
+  .header-actions > .theme-toggle-slider { min-width:88px; padding-inline:6px; }
+  .theme-toggle-slider .daynight-track { flex-basis:35px; width:35px; }
+  .theme-toggle-slider .daynight-track.is-night .daynight-thumb { transform: translate3d(12px,0,0); }
+}
+@media (prefers-reduced-motion:reduce) {
+  html.theme-slide-active::view-transition-old(root),
+  html.theme-slide-active::view-transition-new(root) { animation:none !important; }
+  .theme-toggle-slider .daynight-thumb { transition:none !important; }
+}

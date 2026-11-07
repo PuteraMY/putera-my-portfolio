@@ -2,50 +2,36 @@
 
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type TransitionController = { finished: Promise<void> };
+type TransitionDocument = Document & {
+  startViewTransition?: (update: () => void) => TransitionController;
+};
 
 /**
- * Reliable theme wipe for phones and desktops.
- * Do not depend on document.startViewTransition: support varies on Android.
- * The temporary overlay is an SVG surface so Chrome forced darkening cannot
- * turn the light-mode reveal charcoal. Actual theme changes under the veil.
+ * Day/Night Switch.
+ *
+ * Browser snapshots move the complete NEW page across the OLD page without
+ * mixing foreground colors and surfaces. This avoids the gray, low-contrast
+ * intermediate frames visible in the previous Android recording.
  */
 export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const switching = useRef(false);
-  const activeLayer = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
     const requested = new URLSearchParams(window.location.search).get("theme");
     if (requested === "dark" || requested === "light") setTheme(requested);
-    return () => {
-      activeLayer.current?.remove();
-      activeLayer.current = null;
-    };
   }, [setTheme]);
 
-  function switchTheme(event: MouseEvent<HTMLButtonElement>) {
-    if (switching.current || document.querySelector(".theme-wipe-layer")) return;
+  function switchTheme() {
+    if (switching.current) return;
     const next = resolvedTheme === "dark" ? "light" : "dark";
-    const button = event.currentTarget;
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rect = button.getBoundingClientRect();
-    const x = Math.round(rect.left + rect.width / 2);
-    const y = Math.round(rect.top + rect.height / 2);
-    const radius = Math.ceil(Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    )) + 10;
-
-    const apply = () => {
-      root.classList.toggle("light", next === "light");
-      root.classList.toggle("dark", next === "dark");
-      root.style.colorScheme = next === "light" ? "only light" : "dark";
-      setTheme(next);
-    };
 
     try {
       const url = new URL(window.location.href);
@@ -54,100 +40,40 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
         window.history.replaceState(null, "", url.pathname + url.search + url.hash);
       }
     } catch {
-      // Keep the theme control usable without access to URL history.
+      // Theme changes must not depend on browser history permission.
     }
 
-    if (reduced) {
+    const apply = () => {
+      // Apply the complete palette together before the new frame is captured.
+      root.classList.toggle("light", next === "light");
+      root.classList.toggle("dark", next === "dark");
+      root.style.colorScheme = next === "light" ? "only light" : "dark";
+      setTheme(next);
+    };
+
+    const doc = document as TransitionDocument;
+
+    // No View Transition API: instant correct theme plus the sliding switch.
+    // An abrupt but readable switch is preferable to an unreadable gray fade.
+    if (reduced || typeof doc.startViewTransition !== "function") {
       apply();
       return;
     }
 
-    // A small, temporary SVG covers the page with the NEXT palette.
-    // The circular wipe is visible even when View Transitions API is absent.
-    const layer = document.createElement("div");
-    layer.className = "theme-wipe-layer";
-    layer.setAttribute("aria-hidden", "true");
-    layer.style.setProperty("--wipe-x", x + "px");
-    layer.style.setProperty("--wipe-y", y + "px");
-    layer.style.setProperty("--wipe-accent", next === "dark" ? "rgba(184, 140, 255, .22)" : "rgba(139, 92, 246, .14)");
-    layer.style.clipPath = `circle(0px at ${x}px ${y}px)`;
-
-    const ns = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(ns, "svg");
-    svg.setAttribute("width", "100%");
-    svg.setAttribute("height", "100%");
-    svg.setAttribute("preserveAspectRatio", "none");
-    svg.setAttribute("focusable", "false");
-    const surface = document.createElementNS(ns, "rect");
-    surface.setAttribute("width", "100%");
-    surface.setAttribute("height", "100%");
-    surface.setAttribute("fill", next === "dark" ? "#0B0B1A" : "#F8F7FF");
-    // A translucent wave keeps real page content visible during the sweep.
-    surface.setAttribute("fill-opacity", ".22");
-    svg.appendChild(surface);
-    layer.appendChild(svg);
-    const halo = document.createElement("span");
-    halo.className = "theme-wipe-halo";
-    layer.appendChild(halo);
-
-    let applied = false;
-    const applyOnce = () => {
-      if (applied) return;
-      applied = true;
-      apply();
-    };
     switching.current = true;
-    button.setAttribute("data-switching", "true");
-    activeLayer.current = layer;
-    document.body.appendChild(layer);
-
-    // First register transitions against the OLD color values and flush once.
-    // next-themes must not disable transitions during this intentional change.
-    root.classList.add("theme-animating");
-    void document.body.offsetWidth;
-    applyOnce();
-
-    const animateWipe = async () => {
-      try {
-        // WAAPI works on current Android Chrome and most modern WebViews.
-        // CSS transitions cover the remaining browsers.
-        if (typeof layer.animate === "function") {
-          const reveal = layer.animate(
-            [
-              { clipPath: `circle(0px at ${x}px ${y}px)` },
-              { clipPath: `circle(${radius}px at ${x}px ${y}px)` },
-            ],
-            { duration: 680, easing: "cubic-bezier(0.45, 0, 0.20, 1)", fill: "forwards" },
-          );
-          await reveal.finished;
-          const fade = layer.animate(
-            [{ opacity: 1 }, { opacity: 0 }],
-            { duration: 160, easing: "ease-out", fill: "forwards" },
-          );
-          await fade.finished;
-        } else {
-          layer.style.transition = "clip-path 680ms cubic-bezier(.45,0,.20,1), opacity 160ms ease-out";
-          await new Promise<void>((done) => {
-            requestAnimationFrame(() => {
-              layer.style.clipPath = `circle(${radius}px at ${x}px ${y}px)`;
-              window.setTimeout(done, 705);
-            });
-          });
-          layer.style.opacity = "0";
-          await new Promise<void>((done) => window.setTimeout(done, 170));
-        }
-      } catch {
-        applyOnce();
-      } finally {
-        applyOnce();
-        layer.remove();
-        root.classList.remove("theme-animating");
-        if (activeLayer.current === layer) activeLayer.current = null;
-        switching.current = false;
-        button.removeAttribute("data-switching");
-      }
+    root.classList.add("theme-slide-active");
+    const finish = () => {
+      root.classList.remove("theme-slide-active");
+      switching.current = false;
     };
-    void animateWipe();
+
+    try {
+      const transition = doc.startViewTransition(() => apply());
+      transition.finished.then(finish, finish);
+    } catch {
+      apply();
+      finish();
+    }
   }
 
   if (!mounted) return <span aria-hidden="true" className="theme-toggle theme-placeholder" />;
@@ -156,14 +82,16 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   return (
     <button
       type="button"
-      className={"theme-toggle theme-toggle-animated" + (inMenu ? " theme-toggle-menu" : "")}
+      className={"theme-toggle theme-toggle-animated theme-toggle-slider" + (inMenu ? " theme-toggle-menu" : "")}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
       aria-pressed={dark}
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={switchTheme}
     >
-      <span className="theme-toggle-symbol" key={dark ? "sun" : "moon"} aria-hidden="true">
-        {dark ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
+      <span className={"daynight-track" + (dark ? " is-night" : " is-day")} aria-hidden="true">
+        <span className="daynight-thumb">
+          {dark ? <Moon size={13} strokeWidth={2.3} /> : <Sun size={13} strokeWidth={2.3} />}
+        </span>
       </span>
       <span className="theme-toggle-word">{dark ? "LIGHT" : "DARK"}</span>
     </button>
