@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, ExternalLink } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
 import { useRef, useState } from "react";
 import { useReducedMotion, motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -23,6 +23,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div className="project-image-wrap">
           <Image src={project.image} alt={project.imageAlt} fill sizes="(max-width: 767px) 85vw, (max-width: 1023px) 45vw, 30vw" className="project-image" />
           <span className="project-number font-mono">0{index + 1}</span>
+          <span className="project-cover-cue" aria-hidden="true">Explore project <ArrowUpRight size={16} /></span>
         </div>
       </Link>
       <div className="project-content">
@@ -61,11 +62,20 @@ export function Projects() {
     <section id="projects" className="section-block projects-section" aria-labelledby="projects-heading">
       <div className="page-container">
         <SectionHeading centered eyebrow="FEATURED PROJECTS" id="projects-heading">Some of My Recent Work</SectionHeading>
-        <div className="projects-carousel" ref={scrollRef} onScroll={onScroll} aria-label="Featured projects carousel">
+        <div className="projects-carousel" ref={scrollRef} onScroll={onScroll} role="region" aria-roledescription="carousel" aria-label="Featured projects carousel" tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.target !== event.currentTarget) return;
+            if (event.key === "ArrowRight") { event.preventDefault(); goTo(Math.min(active + 1, projects.length - 1)); }
+            if (event.key === "ArrowLeft") { event.preventDefault(); goTo(Math.max(active - 1, 0)); }
+          }}>
           {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} />)}
         </div>
-        <div className="project-pagination" role="group" aria-label="Choose a featured project">
-          {projects.map((project, index) => <button key={project.slug} type="button" className={`pagination-dot ${index === active ? "is-active" : ""}`} aria-label={`Go to project ${index + 1}: ${project.title}`} aria-pressed={index === active} onClick={() => goTo(index)} />)}
+        <div className="project-controls">
+          <button type="button" className="project-nav-button" aria-label="Previous project" disabled={active === 0} onClick={() => goTo(Math.max(0, active - 1))}><ArrowLeft size={19} aria-hidden="true" /></button>
+          <div className="project-pagination" role="group" aria-label="Choose a featured project">
+            {projects.map((project, index) => <button key={project.slug} type="button" className={`pagination-dot ${index === active ? "is-active" : ""}`} aria-label={`Go to project ${index + 1}: ${project.title}`} aria-pressed={index === active} onClick={() => goTo(index)} />)}
+          </div>
+          <button type="button" className="project-nav-button" aria-label="Next project" disabled={active === projects.length - 1} onClick={() => goTo(Math.min(active + 1, projects.length - 1))}><ArrowRight size={19} aria-hidden="true" /></button>
         </div>
       </div>
     </section>

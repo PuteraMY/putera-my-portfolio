@@ -72,7 +72,10 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
     <section id="home" className="hero-section" aria-labelledby="hero-title">
       <div className="page-container hero-grid">
         <div className="hero-copy">
-          <motion.div {...anim(0.04)}><Badge>I&apos;M A WEB DEVELOPER</Badge></motion.div>
+          <motion.div {...anim(0.04)} className="hero-intro-line">
+            <Badge>I&apos;M A WEB DEVELOPER</Badge>
+            <span className="hero-availability"><span className="availability-dot" aria-hidden="true" />{site.availability}</span>
+          </motion.div>
           <motion.h1 {...anim(0.12)} id="hero-title" className="hero-title">Hi, I&apos;m <span className="gradient-name">Putera MY.</span><span className="hero-second-line">{site.headline}</span></motion.h1>
           <motion.p {...anim(0.21)} className="hero-lead">{site.bio}</motion.p>
           <motion.div {...anim(0.3)} className="hero-ctas">

@@ -85,7 +85,7 @@ export function Header() {
   }
 
   return (
-    <header className="site-header">
+    <header className={`site-header ${scroll > 0.02 ? "header-scrolled" : ""}`}>
       <div className="page-container header-inner">
         <Link href="/" className="brand-lockup" aria-label="Putera MY — Homepage" onClick={close}>
           <Code2 size={29} strokeWidth={2.8} aria-hidden="true" className="brand-symbol" />
