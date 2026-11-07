@@ -631,3 +631,44 @@ html.dark .availability-dot { background: #5FDAA0; }
   .project-cover-cue { transform: none !important; }
   .nav-link:hover, .tech-tile:hover, .fact-card:hover, .contact-feature:hover, .brand-lockup:hover .brand-symbol, .hero-ctas .btn:hover svg { transform: none !important; }
 }
+
+
+/* Dark/Light interaction — circular reveal from the pressed toggle.
+   The API animates screenshots, never the page's real layout or text. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none !important;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) { z-index: 2; }
+
+.theme-toggle-animated {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 210ms ease, box-shadow 210ms ease, transform 210ms ease;
+}
+.theme-toggle-animated:hover {
+  border-color: var(--brand-strong);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, .11);
+}
+.theme-toggle-animated:active { transform: scale(.97); }
+.theme-toggle-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 18px;
+  animation: theme-symbol-arrive 390ms cubic-bezier(.2, 1.3, .3, 1) both;
+  transform-origin: center;
+}
+.theme-toggle-word { transition: color 220ms ease; }
+@keyframes theme-symbol-arrive {
+  from { opacity: .35; transform: rotate(-68deg) scale(.65); }
+  to { opacity: 1; transform: rotate(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  .theme-toggle-symbol { animation: none !important; }
+  .theme-toggle-animated:active { transform: none !important; }
+}

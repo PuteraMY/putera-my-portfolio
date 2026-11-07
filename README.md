@@ -106,3 +106,7 @@ The website declares `color-scheme: only light` in its light theme so browsers u
 - Contact links are conditional on verified personal details. A real email, professional LinkedIn URL, and owner-approved CV PDF **have not been provided**; do not invent or publish them. The GitHub link remains the current verified route.
 - The production `main` branch and CONTROL ROOM branch are unchanged. Do not merge before owner review.
 - Android light-mode backgrounds explicitly paint the hero and page sections to prevent mixed dark/light rendering. Test both themes on the actual owner device.
+
+### Theme switching animation
+
+The LIGHT / DARK control uses a circular View Transitions API reveal originating at the button (620 ms) with an icon rotation. Unsupported browsers use a subtle 330 ms fade. `prefers-reduced-motion: reduce` switches immediately with no animated wipe. Theme persistence and the Android light-mode canvas protection remain enabled.
