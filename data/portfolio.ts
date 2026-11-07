@@ -136,4 +136,4 @@ export const projectCounts = {
   active: projects.filter((p) => p.status === "in-development").length,
   areas: site.focusAreas.length,
 };
-export const isEmailConfigured = () => Boolean(site.email && /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(site.email));
+export const isEmailConfigured = () => Boolean(site.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(site.email));

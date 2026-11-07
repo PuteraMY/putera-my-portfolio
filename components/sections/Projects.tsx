@@ -33,6 +33,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
         <div className="project-actions">
           <Link href={`/projects/${project.slug}`} className="project-text-link">Case study <ArrowUpRight size={16} aria-hidden="true" /></Link>
           {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="project-text-link muted-link" aria-label={`Open ${project.title} live site in a new tab`}>Live site <ExternalLink size={15} aria-hidden="true" /></a>}
+          {project.sourceUrl && <a href={project.sourceUrl} target="_blank" rel="noopener noreferrer" className="project-text-link muted-link" aria-label={`Open ${project.title} source code on GitHub in a new tab`}>Source code <ExternalLink size={15} aria-hidden="true" /></a>}
         </div>
       </div>
     </motion.article>
