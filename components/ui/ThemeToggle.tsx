@@ -13,14 +13,11 @@ type ThemeTransitionDocument = Document & {
   startViewTransition?: (update: () => void) => ThemeViewTransition;
 };
 
-/**
- * Circular light/dark reveal starts at the pressed control.
- * Falls back gracefully in browsers without the View Transitions API.
- */
+/** A theme reveal starts at the pressed button; the theme works without animation too. */
 export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const changing = useRef(false);
+  const switching = useRef(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,25 +26,16 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
   }, [setTheme]);
 
   function switchTheme(event: MouseEvent<HTMLButtonElement>) {
-    if (changing.current) return;
-
+    if (switching.current) return;
+    const button = event.currentTarget;
     const next = resolvedTheme === "dark" ? "light" : "dark";
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = Math.round(rect.left + rect.width / 2);
-    const y = Math.round(rect.top + rect.height / 2);
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
-    // Update both the visible class and persisted next-themes preference
-    // inside one view-transition snapshot, so the wipe never mixes themes.
-    const apply = () => {
-      root.classList.toggle("light", next === "light");
-      root.classList.toggle("dark", next === "dark");
-      root.style.colorScheme = next === "light" ? "only light" : "dark";
-      setTheme(next);
-    };
-
-    // Remove a direct preview override, but keep the Vercel share token.
+    // Remove only the direct theme override; keep any Vercel share parameter.
     try {
       const url = new URL(window.location.href);
       if (url.searchParams.has("theme")) {
@@ -55,24 +43,36 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
         window.history.replaceState(null, "", url.pathname + url.search + url.hash);
       }
     } catch {
-      // Theme switching does not depend on History API access.
+      // The theme itself does not depend on the History API.
     }
 
-    const doc = document as ThemeTransitionDocument;
-    if (reduced || !doc.startViewTransition) {
+    const apply = () => {
+      // Update synchronously so the View Transitions API captures a coherent
+      // light/dark snapshot before next-themes persists the selection.
+      root.classList.toggle("light", next === "light");
+      root.classList.toggle("dark", next === "dark");
+      root.style.colorScheme = next === "light" ? "only light" : "dark";
+      setTheme(next);
+    };
+
+    const documentWithTransition = document as ThemeTransitionDocument;
+    if (reduced) {
       apply();
-      if (!reduced) {
-        document.body.animate(
-          [{ opacity: 0.82 }, { opacity: 1 }],
-          { duration: 330, easing: "ease-out" },
-        );
-      }
       return;
     }
 
-    changing.current = true;
+    // Older browsers get a soft color change, not a full-page opacity flash.
+    if (typeof documentWithTransition.startViewTransition !== "function") {
+      root.classList.add("theme-soft-swap");
+      apply();
+      window.setTimeout(() => root.classList.remove("theme-soft-swap"), 350);
+      return;
+    }
+
+    switching.current = true;
+    button.setAttribute("data-switching", "true");
     try {
-      const transition = doc.startViewTransition(() => apply());
+      const transition = documentWithTransition.startViewTransition(apply);
       transition.ready
         .then(() => {
           const radius = Math.ceil(Math.hypot(
@@ -80,9 +80,14 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
             Math.max(y, window.innerHeight - y),
           ));
           root.animate(
-            { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
             {
-              duration: 620,
+              clipPath: [
+                `circle(0px at ${x}px ${y}px)`,
+                `circle(${radius}px at ${x}px ${y}px)`,
+              ],
+            },
+            {
+              duration: 570,
               easing: "cubic-bezier(0.22, 1, 0.36, 1)",
               fill: "both",
               pseudoElement: "::view-transition-new(root)",
@@ -90,14 +95,16 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
           );
         })
         .catch(() => {
-          // The theme itself has already changed; animation is optional.
+          // A cancelled transition does not undo the theme.
         });
-      transition.finished.then(
-        () => { changing.current = false; },
-        () => { changing.current = false; },
-      );
+      const done = () => {
+        switching.current = false;
+        button.removeAttribute("data-switching");
+      };
+      transition.finished.then(done, done);
     } catch {
-      changing.current = false;
+      switching.current = false;
+      button.removeAttribute("data-switching");
       apply();
     }
   }
@@ -114,8 +121,8 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
       title={dark ? "Switch to light mode" : "Switch to dark mode"}
       onClick={switchTheme}
     >
-      <span key={dark ? "sun" : "moon"} className="theme-toggle-symbol" aria-hidden="true">
-        {dark ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
+      <span className="theme-toggle-symbol" key={dark ? "sun" : "moon"} aria-hidden="true">
+        {dark ? <Sun size={16} strokeWidth={2} /> : <Moon size={16} strokeWidth={2} />}
       </span>
       <span className="theme-toggle-word">{dark ? "LIGHT" : "DARK"}</span>
     </button>

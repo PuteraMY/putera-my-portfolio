@@ -672,3 +672,77 @@ html.dark .availability-dot { background: #5FDAA0; }
   .theme-toggle-symbol { animation: none !important; }
   .theme-toggle-animated:active { transform: none !important; }
 }
+
+
+/* Theme Switch Polish v2 — controlled reveal and quieter button details. */
+.theme-toggle-animated {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: border-color 220ms var(--ease-out), background-color 220ms var(--ease-out), box-shadow 220ms var(--ease-out), transform 180ms var(--ease-out);
+}
+.theme-toggle-animated:hover,
+.theme-toggle-animated:focus-visible {
+  border-color: var(--brand-strong);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, .10);
+}
+.theme-toggle-animated[data-switching="true"] {
+  border-color: var(--brand-strong);
+}
+.theme-toggle-symbol {
+  flex: 0 0 24px;
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--badge-bg);
+  color: var(--brand);
+  animation: theme-icon-morph 380ms cubic-bezier(.16, 1, .3, 1) both;
+}
+html.dark .theme-toggle-symbol {
+  background: rgba(250, 204, 21, .10);
+  border-color: rgba(250, 204, 21, .20);
+  color: #FACC15;
+}
+@keyframes theme-icon-morph {
+  0% { opacity: .55; transform: rotate(-55deg) scale(.72); }
+  70% { opacity: 1; transform: rotate(8deg) scale(1.05); }
+  100% { opacity: 1; transform: rotate(0) scale(1); }
+}
+.theme-toggle-animated[data-switching="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 10px;
+  pointer-events: none;
+  border: 1px solid var(--brand-strong);
+  opacity: 0;
+  animation: theme-button-ring 530ms ease-out both;
+}
+@keyframes theme-button-ring {
+  0% { opacity: .45; transform: scale(.88); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+html.theme-soft-swap body,
+html.theme-soft-swap .site-header,
+html.theme-soft-swap .btn,
+html.theme-soft-swap .fact-card,
+html.theme-soft-swap .project-card,
+html.theme-soft-swap .skill-evidence-item,
+html.theme-soft-swap .theme-toggle,
+html.theme-soft-swap .contact-feature {
+  transition: color 290ms ease-out, background-color 290ms ease-out, border-color 290ms ease-out, box-shadow 290ms ease-out;
+}
+@media (max-width: 767px) {
+  .header-actions > .theme-toggle-animated { gap: 4px; }
+  .header-actions > .theme-toggle-animated .theme-toggle-symbol { flex-basis: 22px; width: 22px; height: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle-symbol,
+  .theme-toggle-animated[data-switching="true"]::after { animation: none !important; }
+  html.theme-soft-swap body,
+  html.theme-soft-swap .site-header { transition: none !important; }
+}

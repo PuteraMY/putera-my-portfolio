@@ -110,3 +110,7 @@ The website declares `color-scheme: only light` in its light theme so browsers u
 ### Theme switching animation
 
 The LIGHT / DARK control uses a circular View Transitions API reveal originating at the button (620 ms) with an icon rotation. Unsupported browsers use a subtle 330 ms fade. `prefers-reduced-motion: reduce` switches immediately with no animated wipe. Theme persistence and the Android light-mode canvas protection remain enabled.
+
+### Theme transition polish (v2)
+
+The light/dark control triggers a 570 ms circular View Transition from the pressed button on supported browsers. The icon rotates briefly inside a compact tint ring; a short button-border pulse reinforces the action. For browsers without the View Transitions API, the page uses a 290 ms color-only fallback without the previous whole-page opacity flash. With `prefers-reduced-motion`, themes change instantly. Existing dark/light storage, explicit `?theme=` links, and Android white-canvas protection remain intact.
