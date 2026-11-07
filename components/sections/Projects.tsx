@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
-import { useRef, useState } from "react";
+import { ArrowLeft, ArrowLeftRight, ArrowRight, ArrowUpRight, ExternalLink } from "lucide-react";
+import { useRef, useState, type PointerEvent } from "react";
 import { useReducedMotion, motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
@@ -11,9 +11,40 @@ import { projects, type Project } from "@/data/portfolio";
 
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   const reduce = useReducedMotion();
+  const tiltFrame = useRef<number | null>(null);
+
+  const onCardMove = (event: PointerEvent<HTMLElement>) => {
+    if (reduce || event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (tiltFrame.current !== null) return;
+    const node = event.currentTarget;
+    const { clientX, clientY } = event;
+    tiltFrame.current = requestAnimationFrame(() => {
+      const rect = node.getBoundingClientRect();
+      const x = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+      const y = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+      node.style.setProperty("--tilt-y", ((x - 0.5) * 5).toFixed(2) + "deg");
+      node.style.setProperty("--tilt-x", ((0.5 - y) * 5).toFixed(2) + "deg");
+      node.style.setProperty("--glow-x", (x * 100).toFixed(1) + "%");
+      node.style.setProperty("--glow-y", (y * 100).toFixed(1) + "%");
+      tiltFrame.current = null;
+    });
+  };
+
+  const onCardLeave = (event: PointerEvent<HTMLElement>) => {
+    if (tiltFrame.current !== null) cancelAnimationFrame(tiltFrame.current);
+    tiltFrame.current = null;
+    const node = event.currentTarget;
+    node.style.removeProperty("--tilt-y");
+    node.style.removeProperty("--tilt-x");
+    node.style.removeProperty("--glow-x");
+    node.style.removeProperty("--glow-y");
+  };
+
   return (
     <motion.article
       className={`project-card project-${project.accent}`}
+      onPointerMove={onCardMove}
+      onPointerLeave={onCardLeave}
       initial={reduce ? false : { opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
@@ -62,7 +93,7 @@ export function Projects() {
     <section id="projects" className="section-block projects-section" aria-labelledby="projects-heading">
       <div className="page-container">
         <SectionHeading centered eyebrow="FEATURED PROJECTS" id="projects-heading">Some of My Recent Work</SectionHeading>
-        <div className="projects-carousel" ref={scrollRef} onScroll={onScroll} role="region" aria-roledescription="carousel" aria-label="Featured projects carousel" tabIndex={0}
+        <div className="projects-carousel" ref={scrollRef} onScroll={onScroll} role="region" aria-roledescription="carousel" aria-label="Featured projects carousel" aria-describedby="project-swipe-hint" tabIndex={0}
           onKeyDown={(event) => {
             if (event.target !== event.currentTarget) return;
             if (event.key === "ArrowRight") { event.preventDefault(); goTo(Math.min(active + 1, projects.length - 1)); }
@@ -70,6 +101,7 @@ export function Projects() {
           }}>
           {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} />)}
         </div>
+        <p className="project-swipe-hint" id="project-swipe-hint"><ArrowLeftRight size={15} aria-hidden="true" /> Swipe to explore <span className="project-swipe-count">0{active + 1} / 0{projects.length}</span></p>
         <div className="project-controls">
           <button type="button" className="project-nav-button" aria-label="Previous project" disabled={active === 0} onClick={() => goTo(Math.max(0, active - 1))}><ArrowLeft size={19} aria-hidden="true" /></button>
           <div className="project-pagination" role="group" aria-label="Choose a featured project">

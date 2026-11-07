@@ -114,3 +114,14 @@ The LIGHT / DARK control uses a circular View Transitions API reveal originating
 ### Theme transition polish (v2)
 
 The light/dark control triggers a 570 ms circular View Transition from the pressed button on supported browsers. The icon rotates briefly inside a compact tint ring; a short button-border pulse reinforces the action. For browsers without the View Transitions API, the page uses a 290 ms color-only fallback without the previous whole-page opacity flash. With `prefers-reduced-motion`, themes change instantly. Existing dark/light storage, explicit `?theme=` links, and Android white-canvas protection remain intact.
+
+### Premium & Balanced motion pass (v5)
+
+- Subtle purple aurora behind the hero (CSS animation); mouse-follow only for fine-pointer desktop input, throttled to one animation frame. Mobile uses a static, low-opacity glow.
+- Screenshot cards respond to the mouse with a restrained perspective shift and pointer highlight. Touch and reduced-motion modes disable the tilt.
+- Scroll reveals use a consistent eased entrance; skills sections are staggered.
+- Project case-study pages have a progressive header, facts and screenshot entrance. Existing Next.js links and prefetching are preserved; this is a page entrance, not a shared-element morph.
+- Mobile project carousel includes a swipe hint, progress, arrow buttons and keyboard navigation.
+- Primary CTAs get gentle sheen on hover and maintain visible focus outlines.
+- All optional motion respects `prefers-reduced-motion`, and the light-mode Android canvas safeguard remains in place.
+

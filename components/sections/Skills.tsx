@@ -1,5 +1,6 @@
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TechnologyItem } from "@/components/ui/TechnologyItem";
+import { Reveal } from "@/components/ui/Reveal";
 import { skills } from "@/data/portfolio";
 
 const groups = ["Web foundations", "Frameworks", "Workflow & deployment"] as const;
@@ -11,13 +12,13 @@ export function Skills() {
         <SectionHeading centered eyebrow="TOOLS IN MY PROJECTS" id="skills-heading">Technologies I Work With</SectionHeading>
         <p className="skills-note">A project-backed toolkit, not self-rated percentages. You can inspect the work in the case studies below.</p>
         <div className="skills-grid">
-          {groups.map((group) => (
-            <div className="skill-column" key={group}>
+          {groups.map((group, index) => (
+            <Reveal className="skill-column" key={group} delay={index * 0.09}>
               <h3 className="skill-group-heading">{group}</h3>
               <ul className="skill-evidence-list">
                 {skills.filter((skill) => skill.category === group).map((skill) => <TechnologyItem skill={skill} key={skill.label} />)}
               </ul>
-            </div>
+            </Reveal>
           ))}
         </div>
       </div>

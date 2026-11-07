@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { ArrowDownRight, ArrowUpRight, CircleCheck, Code2, Terminal } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef, type PointerEvent } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { LinkButton } from "@/components/ui/Button";
 import { site } from "@/data/portfolio";
@@ -62,6 +63,35 @@ function LaptopVisual() {
 
 export function Hero({ cvHref }: { cvHref: string | null }) {
   const reduce = useReducedMotion();
+  const auroraFrame = useRef<number | null>(null);
+
+  // Pointer-based glow is opt-in for fine pointers and runs at most once per frame.
+  useEffect(() => () => {
+    if (auroraFrame.current !== null) cancelAnimationFrame(auroraFrame.current);
+  }, []);
+
+  const handleAuroraMove = (event: PointerEvent<HTMLElement>) => {
+    if (reduce || event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    if (auroraFrame.current !== null) return;
+    const section = event.currentTarget;
+    const { clientX, clientY } = event;
+    auroraFrame.current = requestAnimationFrame(() => {
+      const rect = section.getBoundingClientRect();
+      const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+      const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
+      section.style.setProperty("--aurora-x", x.toFixed(1) + "%");
+      section.style.setProperty("--aurora-y", y.toFixed(1) + "%");
+      auroraFrame.current = null;
+    });
+  };
+
+  const handleAuroraLeave = (event: PointerEvent<HTMLElement>) => {
+    if (auroraFrame.current !== null) cancelAnimationFrame(auroraFrame.current);
+    auroraFrame.current = null;
+    event.currentTarget.style.removeProperty("--aurora-x");
+    event.currentTarget.style.removeProperty("--aurora-y");
+  };
+
   const anim = (delay = 0) => ({
     initial: reduce ? false as const : { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -69,7 +99,7 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
   });
 
   return (
-    <section id="home" className="hero-section" aria-labelledby="hero-title">
+    <section id="home" className="hero-section" aria-labelledby="hero-title" onPointerMove={handleAuroraMove} onPointerLeave={handleAuroraLeave}>
       <div className="page-container hero-grid">
         <div className="hero-copy">
           <motion.div {...anim(0.04)} className="hero-intro-line">

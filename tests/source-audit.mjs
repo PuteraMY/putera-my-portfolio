@@ -38,4 +38,15 @@ const pkg=JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
 assert(pkg.dependencies["react-icons"]);
 assert(pkg.dependencies["next-themes"]);
 assert(pkg.dependencies["framer-motion"]);
-console.log("PASS: source integrity, 3 real site screenshots, recruiter content and honest contact guardrails");
+
+const hero=readFileSync(join(root,"components/sections/Hero.tsx"),"utf8");
+const projectsUI=readFileSync(join(root,"components/sections/Projects.tsx"),"utf8");
+const skillsUI=readFileSync(join(root,"components/sections/Skills.tsx"),"utf8");
+assert.match(hero,/handleAuroraMove/);
+assert.match(projectsUI,/onCardMove/);
+assert.match(projectsUI,/project-swipe-hint/);
+assert.match(skillsUI,/<Reveal className="skill-column"/);
+assert.match(css,/Aurora Interaction v5/);
+assert.match(css,/prefers-reduced-motion:reduce/);
+assert.match(css,/case-enter/);
+console.log("PASS: source integrity, verified screenshots, premium UI interactions and reduced-motion guardrails");
