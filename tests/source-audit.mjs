@@ -25,7 +25,7 @@ assert.match(data,/https:\/\/vanta-fun-vue\.vercel\.app\//);
 assert.match(data,/https:\/\/nimbuscloud-eta\.vercel\.app/);
 assert.doesNotMatch(data,/50\+ projects|30\+ happy|100% client|4\+ years/i);
 assert.doesNotMatch(data,/imageIsIllustrative: true/);
-assert.match(data,/email: "puteraaqmalputera@gmail\\.com"/);
+assert(data.includes('email: "puteraaqmalputera@gmail.com"'));
 assert.match(data,/cvPath: ""/);
 const page=readFileSync(join(root,"app/page.tsx"),"utf8");
 assert.doesNotMatch(page,/<Blog\s*\/>/);
