@@ -39,7 +39,7 @@ export const site: Site = {
   github: "https://github.com/puteraaqmalputera-dot",
   linkedin: "", // TODO: Add verified LinkedIn profile URL.
   whatsapp: "", // TODO: Add verified WhatsApp https://wa.me/ URL.
-  email: "", // TODO: Add real email; this also enables Copy Email.
+  email: "puteraaqmalputera@gmail.com",
   phone: "", // TODO: Add a real phone number only if you want it public.
   cvPath: "", // TODO: Set a real file path, e.g. /assets/cv/putera-my.pdf, after adding the PDF.
 };
