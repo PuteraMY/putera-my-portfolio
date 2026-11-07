@@ -101,7 +101,7 @@ export function Header() {
         </nav>
         <div className="header-actions">
           <ThemeToggle />
-          <Link href={href("contact")} className="btn btn-primary header-hire">Hire Me <ArrowUpRight size={18} aria-hidden="true" /></Link>
+          <Link href={href("contact")} className="btn btn-primary header-hire">Let&apos;s Connect <ArrowUpRight size={18} aria-hidden="true" /></Link>
           <button ref={menuButtonRef} type="button" className="menu-toggle" aria-label={open ? "Close navigation menu" : "Open navigation menu"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen((x) => !x)}>
             {open ? <X size={22} /> : <Menu size={22} />}<span>Menu</span>
           </button>
@@ -116,6 +116,8 @@ export function Header() {
               ref={drawerRef}
               id="mobile-navigation"
               aria-label="Mobile navigation"
+              role="dialog"
+              aria-modal="true"
               className="mobile-drawer"
               onKeyDown={trap}
               initial={reduce ? false : { opacity: 0, x: 24 }}

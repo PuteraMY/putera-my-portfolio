@@ -209,13 +209,6 @@ html.dark .skill-fill { background: linear-gradient(90deg, #AF8DFA, #7C3AED); }
 .pagination-dot { width: 13px; height: 13px; border-radius: 999px; border: 0; padding: 0; background: var(--line); transition: width 200ms var(--ease-out), background-color 200ms; }
 .pagination-dot.is-active { width: 26px; background: var(--brand-strong); }
 
-/* Journal */
-.blog-section { border-top: 1px solid var(--line); padding-block: 42px; }
-.blog-inner { display: grid; grid-template-columns: 1fr 1.35fr; align-items: center; gap: 30px; }
-.blog-heading { margin-top: 6px; font-size: 21px; font-weight: 800; }
-.blog-message { display: flex; align-items: center; gap: 14px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--muted); }
-.blog-message p { flex: 1; font-size: 13px; }.blog-message span { opacity: .8; }
-
 /* Contact */
 .contact-section { padding-block: 60px; }
 .contact-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,.75fr); gap: clamp(20px, 4vw, 60px); align-items: center; }
@@ -573,11 +566,11 @@ html.dark .availability-dot { background: #5FDAA0; }
 .tech-tile svg { transition: transform 240ms var(--ease-out); }
 .tech-tile:hover svg { transform: scale(1.08); }
 .laptop-composition { animation: workstation-breathe 7s ease-in-out infinite; }
-.hero-halo { animation: workstation-halo 7s ease-in-out infinite; }
+.hero-halo { animation: none; }
 .floating-code { transition: box-shadow 300ms var(--ease-out), border-color 300ms; }
 .hero-visual:hover .floating-code { border-color: var(--brand-strong); box-shadow: 0 22px 43px rgba(87, 36, 151, .23); }
 @keyframes workstation-breathe { 0%,100% {transform: translateY(0)} 50% {transform: translateY(-6px)} }
-@keyframes workstation-halo { 0%,100% {filter: brightness(1)} 50% {filter: brightness(1.11)} }
+
 
 .fact-card { transition: transform 270ms var(--ease-out), border-color 270ms, box-shadow 270ms; }
 .fact-card:hover { transform: translateY(-3px); border-color: var(--brand-strong); box-shadow: 0 13px 31px rgba(var(--shadow), .12); }
@@ -633,47 +626,6 @@ html.dark .availability-dot { background: #5FDAA0; }
 }
 
 
-/* Dark/Light interaction — circular reveal from the pressed toggle.
-   The API animates screenshots, never the page's real layout or text. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none !important;
-  mix-blend-mode: normal;
-}
-::view-transition-old(root) { z-index: 1; }
-::view-transition-new(root) { z-index: 2; }
-
-.theme-toggle-animated {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  transition: border-color 210ms ease, box-shadow 210ms ease, transform 210ms ease;
-}
-.theme-toggle-animated:hover {
-  border-color: var(--brand-strong);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, .11);
-}
-.theme-toggle-animated:active { transform: scale(.97); }
-.theme-toggle-symbol {
-  display: inline-grid;
-  place-items: center;
-  flex: 0 0 18px;
-  animation: theme-symbol-arrive 390ms cubic-bezier(.2, 1.3, .3, 1) both;
-  transform-origin: center;
-}
-.theme-toggle-word { transition: color 220ms ease; }
-@keyframes theme-symbol-arrive {
-  from { opacity: .35; transform: rotate(-68deg) scale(.65); }
-  to { opacity: 1; transform: rotate(0) scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  .theme-toggle-symbol { animation: none !important; }
-  .theme-toggle-animated:active { transform: none !important; }
-}
-
-
 /* Theme Switch Polish v2 — controlled reveal and quieter button details. */
 .theme-toggle-animated {
   position: relative;
@@ -725,16 +677,6 @@ html.dark .theme-toggle-symbol {
 @keyframes theme-button-ring {
   0% { opacity: .45; transform: scale(.88); }
   100% { opacity: 0; transform: scale(1.12); }
-}
-html.theme-soft-swap body,
-html.theme-soft-swap .site-header,
-html.theme-soft-swap .btn,
-html.theme-soft-swap .fact-card,
-html.theme-soft-swap .project-card,
-html.theme-soft-swap .skill-evidence-item,
-html.theme-soft-swap .theme-toggle,
-html.theme-soft-swap .contact-feature {
-  transition: color 290ms ease-out, background-color 290ms ease-out, border-color 290ms ease-out, box-shadow 290ms ease-out;
 }
 @media (max-width: 767px) {
   .header-actions > .theme-toggle-animated { gap: 4px; }
@@ -863,35 +805,7 @@ a.btn:focus-visible, .project-cover-link:focus-visible, .project-text-link:focus
 }
 
 
-/* VISUAL FIX V6 — visible mobile motion + cross-browser DAY/NIGHT wipe.
-   Main content is never reflowed; all major movement is transform/opacity. */
-.theme-wipe-layer {
-  position: fixed;
-  inset: 0;
-  z-index: 2147483000;
-  overflow: hidden;
-  pointer-events: none;
-  contain: paint;
-  isolation: isolate;
-  will-change: clip-path, opacity;
-}
-.theme-wipe-layer > svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.theme-wipe-halo {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(circle 220px at var(--wipe-x) var(--wipe-y), var(--wipe-accent), transparent 88%);
-}
-.theme-toggle-animated[data-switching="true"] {
-  box-shadow: 0 0 0 3px rgba(124,58,237,.16), 0 0 20px rgba(124,58,237,.12);
-}
-html.dark .theme-toggle-animated[data-switching="true"] {
-  box-shadow: 0 0 0 3px rgba(250,204,21,.15), 0 0 20px rgba(250,204,21,.10);
-}
+/* Mobile card and aurora refinements (V6+) */
 .project-mobile-prompt {
   display: none;
   gap: 8px;
@@ -968,7 +882,7 @@ html.theme-circle-active::view-transition-new(root) {
 html.theme-circle-active::view-transition-old(root) { z-index: 1; }
 html.theme-circle-active::view-transition-new(root) {
   z-index: 2;
-  animation: theme-circle-grow 720ms cubic-bezier(.24,.78,.25,1) both !important;
+  animation: theme-circle-grow 640ms cubic-bezier(.18,.82,.24,1) both !important;
 }
 @keyframes theme-circle-grow {
   from { clip-path: circle(0px at var(--theme-reveal-x) var(--theme-reveal-y)); }
@@ -991,4 +905,57 @@ html.theme-circle-active::view-transition-new(root) {
   html.theme-circle-active::view-transition-old(root),
   html.theme-circle-active::view-transition-new(root),
   .theme-toggle-animated .theme-toggle-symbol { animation: none !important; }
+}
+
+
+/* FINAL POLISH: composited theme reveal, touch ergonomics and readable focus */
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  html.theme-circle-active::view-transition-new(root) {
+    animation-duration: 570ms !important;
+    animation-timing-function: cubic-bezier(.18,.82,.24,1) !important;
+  }
+}
+html.theme-circle-active::view-transition-old(root),
+html.theme-circle-active::view-transition-new(root) {
+  backface-visibility: hidden;
+}
+.theme-toggle-animated { min-height: 44px; touch-action: manipulation; }
+.theme-toggle-animated .theme-toggle-symbol {
+  animation-duration: 340ms;
+}
+.hero-section { isolation: isolate; }
+@media (max-width: 767px) {
+  .hero-grid { min-width: 0; }
+  .hero-copy, .hero-visual { min-width: 0; }
+  .hero-ctas .btn { min-height: 46px; }
+  .project-controls { gap: 3px; }
+  .project-pagination { gap: 0; }
+  .pagination-dot, .pagination-dot.is-active {
+    display: grid; place-items: center;
+    width: 42px; height: 44px;
+    min-width: 42px; flex: 0 0 42px;
+    background: transparent;
+    touch-action: manipulation;
+  }
+  .pagination-dot::before {
+    content: ""; display: block; width: 11px; height: 11px;
+    border-radius: 999px; background: var(--line);
+    transition: width 200ms var(--ease-out), background-color 200ms;
+  }
+  .pagination-dot.is-active::before { width: 23px; background: var(--brand-strong); }
+  .project-nav-button { touch-action: manipulation; }
+  .project-card:active { border-color: var(--brand-strong); }
+  .hero-visual { contain: layout; }
+}
+@media (max-width: 359px) {
+  .page-container { padding-inline: 14px; }
+  .brand-lockup { font-size: 17px; gap: 5px; }
+  .header-actions { gap: 5px; }
+  .hero-ctas { align-items: stretch; }
+  .hero-ctas .btn { flex: 1 1 auto; }
+  .hero-title { font-size: 35px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-halo, .hero-section::after { animation: none !important; }
+  .pagination-dot::before { transition: none; }
 }

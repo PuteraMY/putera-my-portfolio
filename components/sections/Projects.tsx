@@ -9,7 +9,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
 import { projects, type Project } from "@/data/portfolio";
 
-function ProjectCard({ project, index, selected }: { project: Project; index: number; selected: boolean }) {
+function ProjectCard({ project, index, selected, total }: { project: Project; index: number; selected: boolean; total: number }) {
   const reduce = useReducedMotion();
   const tiltFrame = useRef<number | null>(null);
 
@@ -43,6 +43,8 @@ function ProjectCard({ project, index, selected }: { project: Project; index: nu
   return (
     <motion.article
       className={`project-card project-${project.accent} ${selected ? "is-current" : ""}`}
+      aria-roledescription="slide"
+      aria-label={`${index + 1} of ${total}: ${project.title}`}
       onPointerMove={onCardMove}
       onPointerLeave={onCardLeave}
       initial={reduce ? false : { opacity: 0, y: 16 }}
@@ -79,7 +81,10 @@ export function Projects() {
     setActive(index);
     const viewport = scrollRef.current;
     const child = viewport?.children[index] as HTMLElement | undefined;
-    if (viewport && child) viewport.scrollTo({ left: child.offsetLeft - viewport.offsetLeft, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    if (viewport && child) {
+      const left = child.getBoundingClientRect().left - viewport.getBoundingClientRect().left + viewport.scrollLeft;
+      viewport.scrollTo({ left, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+    }
   };
   const onScroll = () => {
     const viewport = scrollRef.current;
@@ -100,9 +105,9 @@ export function Projects() {
             if (event.key === "ArrowRight") { event.preventDefault(); goTo(Math.min(active + 1, projects.length - 1)); }
             if (event.key === "ArrowLeft") { event.preventDefault(); goTo(Math.max(active - 1, 0)); }
           }}>
-          {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} selected={active === index} />)}
+          {projects.map((project, index) => <ProjectCard key={project.slug} project={project} index={index} selected={active === index} total={projects.length} />)}
         </div>
-        <p className="project-swipe-hint" id="project-swipe-hint"><ArrowLeftRight size={15} aria-hidden="true" /> Swipe to explore <span className="project-swipe-count">0{active + 1} / 0{projects.length}</span></p>
+        <p className="project-swipe-hint" id="project-swipe-hint"><span className="project-swipe-count" aria-live="polite">Project 0{active + 1} of 0{projects.length}</span></p>
         <div className="project-controls">
           <button type="button" className="project-nav-button" aria-label="Previous project" disabled={active === 0} onClick={() => goTo(Math.max(0, active - 1))}><ArrowLeft size={19} aria-hidden="true" /></button>
           <div className="project-pagination" role="group" aria-label="Choose a featured project">

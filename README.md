@@ -144,3 +144,15 @@ The previous circular ripple + page color crossfade briefly produced poor contra
 ### V8 Theme transition: V5 design, refined
 
 Based on feedback comparing V5 and V7, the site restores V5's original compact sun/moon button and circular reveal. Rather than animating a page-wide color crossfade (which produced unreadable gray text on Android), the same-document View Transitions API now animates the **complete** new page snapshot with a CSS clip-path circle centered on the pressed toggle. Timing uses 720 ms easing for a less abrupt acceleration/deceleration, and the keyed icon morph is 450 ms. Unsupported browsers retain the original V5 icon motion and an immediate, fully readable palette swap. Reduced-motion users get an instant transition. No fullscreen overlays or horizontal page-slide.
+
+### Premium final polish — preview-only
+
+- Kept the V5-style full-frame circular theme reveal; reduced duration to **570 ms on touch** and **640 ms on desktop**, avoiding mismatched text/surface crossfades. Actual smoothness must still be checked on Android devices and on browsers lacking View Transitions support.
+- Removed unused theme wipe, soft-swap, earlier view transition, and Blog-only CSS. The Chrome Android light SVG canvas guard remains in place.
+- Tightened mobile spacing at 320–359 px and expanded carousel pagination hit targets to 42×44 px.
+- Improved carousel left-offset behavior, accessible slide context and announced current project number.
+- Changed the header CTA from “Hire Me” to “Let's Connect”; no CV, email or professional profile is invented. They remain optional until the real details are supplied.
+- Preview deployments have `robots.txt: Disallow: /` in addition to `noindex` metadata; only actual production deployments allow indexing.
+- Stopped an unnecessary filtered halo animation to reduce continuous painting on mobile.
+- Source audit checks the preview crawling rule, CSS cleanup, focus controls, project navigation and verified CV asset guard.
+- **Outstanding**: real email and CV file from the portfolio owner; actual device QA, Lighthouse and screen-reader checks before a merge to `main`.

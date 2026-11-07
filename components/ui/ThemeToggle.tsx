@@ -26,7 +26,7 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
 
   function switchTheme(event: MouseEvent<HTMLButtonElement>) {
     if (switching.current) return;
-    const next = resolvedTheme === "dark" ? "light" : "dark";
+    const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const bounds = event.currentTarget.getBoundingClientRect();
