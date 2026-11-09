@@ -299,3 +299,74 @@ html.dark .tech-tile { box-shadow: 0 10px 22px rgba(0,0,0,.14); }
   .scene-depth, .laptop-composition { animation: none !important; transition: none !important; }
   .scene-gem { animation: none !important; }
 }
+
+/* Performance mode (Nov 2026): phones and touch browsers get the same 3D
+   illustration without permanent repaints, backdrop blurs or page snapshots.
+   Preserve layers and contrast rather than removing the visual completely. */
+@media (hover: none), (pointer: coarse), (max-width: 767px) {
+  .hero-section::after,
+  .laptop-composition,
+  .scene-gem,
+  .project-mobile-prompt svg,
+  .project-card.is-current .project-cover-cue {
+    animation: none !important;
+  }
+  .hero-section::after {
+    transform: none !important;
+    opacity: .44;
+    inset: 0;
+  }
+  .site-header,
+  .hero-metrics,
+  .scene-service-stack span,
+  .scene-project-note,
+  .scene-stat-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .scene-depth .laptop {
+    filter: none !important; /* Full-laptop drop-shadow forces a large offscreen render. */
+  }
+  .scene-depth {
+    will-change: auto !important;
+    transition: none !important;
+  }
+  .theme-toggle-animated .theme-toggle-symbol,
+  .theme-toggle-symbol,
+  .theme-toggle-animated[data-switching="true"]::after {
+    animation: none !important;
+  }
+  .tech-tile:hover,
+  .project-card:hover,
+  .fact-card:hover { transform: none; }
+}
+@media (max-width: 767px) {
+  .hero-section::after {
+    background:
+      radial-gradient(ellipse 65% 50% at 73% 40%, var(--aurora-a), transparent 90%),
+      radial-gradient(ellipse 48% 50% at 20% 90%, var(--aurora-b), transparent 92%);
+  }
+  .scene-service-stack span { background: #f6f0ff; }
+  html.dark .scene-service-stack span { background: #271b46; }
+  .scene-stat-card { background: #f7f1ff; }
+  .scene-project-note { background: #faf7ff; }
+  .hero-metrics { background: #f9f6ff; }
+  html.light .hero-metrics { background: #f9f6ff; }
+  html.dark .hero-metrics { background: #1c1633; }
+  html.light .site-header { background: #f8f7ff; }
+  html.dark .site-header { background: #0b0b1a; }
+  html.dark .scene-stat-card,
+  html.dark .scene-project-note { background: #251b42; }
+  .scene-depth .laptop-top { box-shadow: 0 12px 24px rgba(36, 21, 82, .24); }
+  .scene-depth .floating-code { box-shadow: 0 10px 20px rgba(36, 21, 82, .16); }
+}
+@media (prefers-reduced-data: reduce) {
+  .hero-section::after,
+  .laptop-composition,
+  .scene-gem { animation: none !important; }
+  .site-header, .hero-metrics,
+  .scene-service-stack span, .scene-project-note, .scene-stat-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

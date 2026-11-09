@@ -21,7 +21,10 @@ export function Header() {
   const reduce = useReducedMotion();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
-  const [scroll, setScroll] = useState(0);
+  // Avoid re-rendering the entire navigation on every scroll frame.
+  const [scrolled, setScrolled] = useState(false);
+  const lastScrolled = useRef(false);
+  const progressRef = useRef<HTMLDivElement>(null);
   const drawerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -31,17 +34,27 @@ export function Header() {
   useEffect(() => {
     let frame = 0;
     const update = () => {
-      cancelAnimationFrame(frame);
+      if (frame) return;
       frame = requestAnimationFrame(() => {
+        frame = 0;
         const max = document.documentElement.scrollHeight - window.innerHeight;
-        setScroll(max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0);
-        if (path !== "/") return;
+        const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+        if (progressRef.current) progressRef.current.style.transform = `scaleX(${progress})`;
+
+        const pastTop = progress > 0.02;
+        if (pastTop !== lastScrolled.current) {
+          lastScrolled.current = pastTop;
+          setScrolled(pastTop);
+        }
+
+        // Section rect checks aren't useful while the desktop navigation is hidden.
+        if (path !== "/" || window.innerWidth < 1024) return;
         let current = "home";
         for (const item of navItems) {
           const section = document.getElementById(item.id);
           if (section && section.getBoundingClientRect().top <= 125) current = item.id;
         }
-        setActive(current);
+        setActive((previous) => previous === current ? previous : current);
       });
     };
     update();
@@ -85,7 +98,7 @@ export function Header() {
   }
 
   return (
-    <header className={`site-header ${scroll > 0.02 ? "header-scrolled" : ""}`}>
+    <header className={`site-header ${scrolled ? "header-scrolled" : ""}`}>
       <div className="page-container header-inner">
         <Link href="/" className="brand-lockup" aria-label="Putera MY — Homepage" onClick={close}>
           <Code2 size={29} strokeWidth={2.8} aria-hidden="true" className="brand-symbol" />
@@ -107,7 +120,7 @@ export function Header() {
           </button>
         </div>
       </div>
-      <div className="scroll-progress" style={{ transform: `scaleX(${scroll})` }} aria-hidden="true" />
+      <div ref={progressRef} className="scroll-progress" style={{ transform: "scaleX(0)" }} aria-hidden="true" />
       <AnimatePresence>
         {open && (
           <>
