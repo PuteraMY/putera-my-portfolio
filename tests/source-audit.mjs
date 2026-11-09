@@ -40,6 +40,16 @@ assert(pkg.dependencies["next-themes"]);
 assert(pkg.dependencies["framer-motion"]);
 
 const hero=readFileSync(join(root,"components/sections/Hero.tsx"),"utf8");
+// Keep the polish layer separate from core styles and preserve the original aurora.
+const threeD=readFileSync(join(root,"app/hero-3d.css"),"utf8");
+assert.match(threeD,/scene-depth/);
+assert.match(threeD,/scene-service-stack/);
+assert.match(threeD,/scene-stat-card/);
+assert.match(threeD,/prefers-reduced-motion: reduce/);
+assert.match(threeD,/max-width: 400px/);
+assert.doesNotMatch(threeD,/\.hero-section::after\s*\{/);
+assert.match(hero,/latestScenePointer/);
+assert.match(hero,/hero-metrics/);
 const projectsUI=readFileSync(join(root,"components/sections/Projects.tsx"),"utf8");
 const skillsUI=readFileSync(join(root,"components/sections/Skills.tsx"),"utf8");
 assert.match(hero,/handleAuroraMove/);
