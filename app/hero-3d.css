@@ -1,11 +1,8 @@
 /* Putera MY — dimensional portfolio upgrade.
    CSS-only 3D with pointer parallax, no WebGL dependency. */
 .hero-section { isolation: isolate; }
-.hero-section::after {
-  content: ""; position: absolute; inset: 0; z-index: 0; pointer-events: none;
-  background: radial-gradient(ellipse 39% 54% at 77% 45%, rgba(150,93,255,.12), transparent 82%),
-              radial-gradient(ellipse 32% 45% at 15% 3%, rgba(119,105,255,.06), transparent 82%);
-}
+/* The global Aurora Interaction v5 uses ::after and pointer coordinates.
+   Keep it intact instead of overriding its gradients here. */
 .hero-grid { z-index: 1; }
 .hero-copy { z-index: 9; }
 .hero-visual { perspective: 1200px; overflow: visible; }
@@ -14,9 +11,12 @@
   position: absolute; inset: 0; z-index: 2; transform-style: preserve-3d;
   transform: rotateX(var(--scene-rx, 0deg)) rotateY(var(--scene-ry, 0deg));
   transition: transform 450ms cubic-bezier(.2,.75,.15,1);
-  will-change: transform;
+  /* Promote to a layer only while the scene is actively hovered. */
 }
 .hero-visual:hover .scene-depth { transition-duration: 130ms; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hero-visual:hover .scene-depth { will-change: transform; }
+}
 .scene-depth .hero-halo { z-index: -2; transform: translateZ(-68px); }
 .scene-depth .laptop {
   z-index: 4;
@@ -159,9 +159,13 @@ html.dark .site-header { background: rgba(11,11,26,.90); }
 }
 .tech-tile:hover { transform: translateY(-5px) rotateX(8deg); box-shadow: 0 14px 24px rgba(86,50,170,.16); }
 .project-card { transform-style: preserve-3d; box-shadow: 0 14px 27px rgba(var(--shadow),.10); }
+/* Retain the existing project-image pointer-tilt implementation in globals.css;
+   do not rotate the full carousel card and fight its scroll/snap motion. */
 @media (hover:hover) and (pointer:fine) {
-  .project-card:hover { transform: perspective(1000px) translate3d(0,-8px,0) rotateX(1.3deg); box-shadow: 0 24px 45px rgba(var(--shadow),.18); }
-  .fact-card:hover { transform: perspective(900px) translateY(-5px) rotateX(2deg); }
+  .project-card:hover, .project-card:focus-within {
+    border-color: var(--brand-strong);
+    box-shadow: 0 21px 43px rgba(var(--shadow),.17);
+  }
 }
 @media (max-width: 1180px) {
   .scene-service-stack { left: -2%; top: 17%; transform: translateZ(102px) scale(.9) rotateZ(5deg); }
@@ -204,4 +208,94 @@ html.dark .site-header { background: rgba(11,11,26,.90); }
   .scene-depth { transition: none !important; transform: none !important; will-change: auto; }
   .scene-gem { animation: none !important; }
   .tech-tile:hover, .project-card:hover, .fact-card:hover { transform: none !important; }
+}
+
+/* V2 polish: restore existing aurora, fix card stacking, improve consistency. */
+.hero-section { scroll-margin-top: var(--header-height, 74px); }
+.hero-copy { padding-right: clamp(0px, 1.1vw, 15px); }
+.hero-title { text-wrap: balance; }
+.hero-lead { text-wrap: pretty; }
+.hero-intro-line { row-gap: 10px; }
+.hero-ctas .btn {
+  transition: transform 210ms var(--ease-out), box-shadow 230ms var(--ease-out),
+              border-color 200ms ease, background-color 200ms ease;
+}
+.hero-ctas .btn:focus-visible,
+.project-card a:focus-visible,
+.hero-bottom-rule a:focus-visible {
+  outline: 3px solid var(--brand-strong);
+  outline-offset: 4px;
+}
+.hero-ctas .btn-primary {
+  box-shadow: 0 8px 18px rgba(108,65,215,.20), 0 2px 4px rgba(51,20,114,.1);
+}
+.hero-ctas .btn-primary:hover {
+  box-shadow: 0 12px 27px rgba(108,65,215,.27), 0 3px 6px rgba(51,20,114,.13);
+}
+.hero-metrics { isolation: isolate; }
+.hero-metric > svg { filter: drop-shadow(0 3px 6px rgba(117,65,231,.12)); }
+.hero-metric strong { letter-spacing: -.015em; }
+.scene-depth .laptop, .scene-depth .floating-code, .scene-service-stack,
+.scene-project-note, .scene-stat-card { backface-visibility: hidden; }
+.scene-service-stack, .scene-project-note, .scene-stat-card { pointer-events: none; }
+.scene-orbit { opacity: .65; }
+.scene-orbit-inner { opacity: .25; }
+.scene-gem { opacity: .88; }
+html.light .hero-metrics {
+  background: rgba(255,255,255,.76);
+  border-color: rgba(147,114,215,.24);
+}
+html.dark .hero-metric > svg { filter: drop-shadow(0 0 7px rgba(145,94,255,.2)); }
+html.dark .tech-tile { box-shadow: 0 10px 22px rgba(0,0,0,.14); }
+@media (min-width: 1181px) {
+  .hero-grid { grid-template-columns: minmax(0, 1.05fr) minmax(0,.95fr); column-gap: clamp(26px,3.2vw,55px); }
+  .hero-visual { height: 445px; }
+  .scene-project-note { top: 3%; right: -1%; }
+  .scene-service-stack { left: -1%; }
+  .scene-depth .floating-code { right: -2%; }
+}
+@media (min-width: 768px) and (max-width: 1180px) {
+  .scene-orbit-outer { width: 101%; left: 0; }
+  .scene-service-stack { left: -1%; }
+  .scene-project-note { right: -1%; }
+  .scene-stat-card { right: 0; }
+}
+@media (max-width: 767px) {
+  /* Touch devices get an uncluttered, calm, static 3D showcase. */
+  .laptop-composition { animation: none; }
+  .hero-copy { padding-right: 0; }
+  .hero-visual { height: clamp(270px, 74vw, 320px); }
+  .scene-depth { transform: none !important; }
+  .scene-orbit { opacity: .36; }
+  .scene-orbit-inner { display: none; }
+  .scene-service-stack { top: 5%; left: 0; }
+  .scene-service-stack span { padding: 8px 11px; border-radius: 12px; }
+  .scene-depth .floating-code { top: 24%; right: -1%; }
+  .scene-stat-card { bottom: 4%; right: 0; }
+  .hero-metrics { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .hero-metric { min-height: 68px; }
+  .hero-metric strong { overflow-wrap: break-word; }
+  .hero-bottom-rule { margin-top: 4px; }
+  .scene-gem { animation: none; }
+  .hero-ctas .btn { min-height: 48px; }
+  .project-card { box-shadow: 0 9px 23px rgba(var(--shadow), .12); }
+  .projects-carousel { scroll-padding-inline: 1px; }
+}
+@media (max-width: 400px) {
+  .scene-service-stack { top: 3%; transform: translateZ(40px) scale(.55) rotateZ(5deg); }
+  .scene-depth .floating-code { transform: translateZ(42px) scale(.90) rotateZ(2deg); transform-origin: top right; }
+  .scene-stat-card { bottom: 1%; transform: translateZ(60px) scale(.58) rotateZ(-5deg); }
+  .scene-gem-one { width: 23px; left: 36%; }
+  .hero-metrics { padding: 6px 3px; }
+  .hero-metric { min-height: 64px; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .hero-metrics, .scene-project-note, .scene-stat-card, .scene-service-stack span {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-depth, .laptop-composition { animation: none !important; transition: none !important; }
+  .scene-gem { animation: none !important; }
 }
