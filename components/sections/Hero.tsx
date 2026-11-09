@@ -22,7 +22,7 @@ const strip: { name: string; icon: Skill["icon"]; color: string }[] = [
 
 function LaptopVisual() {
   return (
-    <div className="laptop-composition" role="img" aria-label="Stylized laptop displaying a sample TypeScript code editor and a floating project code card; illustration, not a screenshot">
+    <div className="laptop-composition" role="img" aria-label="Illustrative three-dimensional developer workspace featuring a laptop with sample TypeScript code and floating cards for web apps, cloud computing, IT support, and featured projects. Not a real screenshot.">
       <div className="scene-orbit scene-orbit-outer" aria-hidden="true" />
       <div className="scene-orbit scene-orbit-inner" aria-hidden="true" />
       <div className="scene-depth" aria-hidden="true">
@@ -83,6 +83,7 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
   const reduce = useReducedMotion();
   const auroraFrame = useRef<number | null>(null);
   const sceneFrame = useRef<number | null>(null);
+  const latestScenePointer = useRef<{ x: number; y: number } | null>(null);
 
   // Pointer-based glow is opt-in for fine pointers and runs at most once per frame.
   useEffect(() => () => {
@@ -115,15 +116,20 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
   // Real perspective/parallax is mouse-only; mobile and reduced-motion users get a static scene.
   const handleSceneMove = (event: PointerEvent<HTMLDivElement>) => {
     if (reduce || event.pointerType !== "mouse" || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    if (sceneFrame.current !== null) return;
     const node = event.currentTarget;
-    const x = event.clientX, y = event.clientY;
+    latestScenePointer.current = { x: event.clientX, y: event.clientY };
+    if (sceneFrame.current !== null) return;
     sceneFrame.current = requestAnimationFrame(() => {
       const bounds = node.getBoundingClientRect();
-      const dx = ((x - bounds.left) / bounds.width - 0.5) * 2;
-      const dy = ((y - bounds.top) / bounds.height - 0.5) * 2;
-      node.style.setProperty("--scene-ry", `${(dx * 7).toFixed(2)}deg`);
-      node.style.setProperty("--scene-rx", `${(-dy * 6).toFixed(2)}deg`);
+      const point = latestScenePointer.current;
+      if (!point || bounds.width === 0 || bounds.height === 0) {
+        sceneFrame.current = null;
+        return;
+      }
+      const dx = Math.max(-1, Math.min(1, ((point.x - bounds.left) / bounds.width - 0.5) * 2));
+      const dy = Math.max(-1, Math.min(1, ((point.y - bounds.top) / bounds.height - 0.5) * 2));
+      node.style.setProperty("--scene-ry", `${(dx * 6).toFixed(2)}deg`);
+      node.style.setProperty("--scene-rx", `${(-dy * 5).toFixed(2)}deg`);
       sceneFrame.current = null;
     });
   };
@@ -131,6 +137,7 @@ export function Hero({ cvHref }: { cvHref: string | null }) {
   const handleSceneLeave = (event: PointerEvent<HTMLDivElement>) => {
     if (sceneFrame.current !== null) cancelAnimationFrame(sceneFrame.current);
     sceneFrame.current = null;
+    latestScenePointer.current = null;
     event.currentTarget.style.removeProperty("--scene-rx");
     event.currentTarget.style.removeProperty("--scene-ry");
   };
