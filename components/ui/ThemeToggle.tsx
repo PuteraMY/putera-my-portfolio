@@ -29,13 +29,9 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
     const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
     const root = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = Math.round(bounds.left + bounds.width / 2);
-    const y = Math.round(bounds.top + bounds.height / 2);
-    const radius = Math.ceil(Math.hypot(
-      Math.max(x, window.innerWidth - x),
-      Math.max(y, window.innerHeight - y),
-    )) + 16;
+    // Mobile browsers must not capture and animate full-page View Transition snapshots.
+    // The 3D scene, fixed canvas and glass layers are too costly to composite on phones.
+    const mobileOrTouch = window.matchMedia("(max-width: 767px), (hover: none), (pointer: coarse)").matches;
 
     // Remove only the temporary preview theme override. Preserve the share link.
     try {
@@ -56,12 +52,20 @@ export function ThemeToggle({ inMenu = false }: { inMenu?: boolean }) {
     };
 
     const doc = document as TransitionCapableDocument;
-    if (reduced || typeof doc.startViewTransition !== "function") {
-      // Never produce a low-contrast intermediate frame on older browsers.
-      // The icon rotates smoothly even when the page snapshot API is absent.
+    if (reduced || mobileOrTouch || typeof doc.startViewTransition !== "function") {
+      // Instant, readable theme changes on mobile and low-motion devices.
+      // Preserve the optional desktop circular reveal.
       apply();
       return;
     }
+
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = Math.round(bounds.left + bounds.width / 2);
+    const y = Math.round(bounds.top + bounds.height / 2);
+    const radius = Math.ceil(Math.hypot(
+      Math.max(x, window.innerWidth - x),
+      Math.max(y, window.innerHeight - y),
+    )) + 16;
 
     switching.current = true;
     const button = event.currentTarget;
