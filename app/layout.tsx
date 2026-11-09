@@ -4,6 +4,7 @@ import { Inter, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import { Providers } from "@/context/theme-provider";
 import { site } from "@/data/portfolio";
 import "./globals.css";
+import "./hero-3d.css";
 
 const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], display: "swap", variable: "--font-jakarta" });
