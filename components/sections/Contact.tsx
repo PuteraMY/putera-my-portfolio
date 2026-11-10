@@ -48,7 +48,7 @@ export function Contact({ cvHref }: { cvHref: string | null }) {
             {site.whatsapp && <a href={site.whatsapp} aria-label="Message on WhatsApp" target="_blank" rel="noopener noreferrer"><MessageCircle size={21} /></a>}
           </div>
           <div className="contact-lines">
-            <a className="contact-line" href={site.github} target="_blank" rel="noopener noreferrer"><Github size={18} aria-hidden="true" /><span>github.com/puteraaqmalputera-dot</span></a>
+            <a className="contact-line" href={site.github} target="_blank" rel="noopener noreferrer"><Github size={18} aria-hidden="true" /><span>github.com/PuteraMY</span></a>
             {hasEmail && <button type="button" onClick={copyEmail} className="contact-line contact-copy" aria-label="Copy professional email address">{copied ? <Check size={18} /> : <Clipboard size={18} />}<span aria-live="polite">{copied ? "Copied" : site.email}</span></button>}
             {site.phone && <a href={"tel:" + site.phone.replace(/\s+/g, "")} className="contact-line"><span>{site.phone}</span></a>}
           </div>
