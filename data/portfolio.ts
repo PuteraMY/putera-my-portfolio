@@ -36,7 +36,7 @@ export const site: Site = {
     "I study Computer Technology with a Cloud Computing focus. I build responsive web interfaces, connect public APIs and explore how web apps are deployed and supported. The projects here are linked to demonstrable work.",
   availability: "Exploring internship and junior opportunities",
   focusAreas: ["Web development", "Cloud Computing", "IT support"],
-  github: "https://github.com/puteraaqmalputera-dot",
+  github: "https://github.com/PuteraMY",
   linkedin: "", // TODO: Add verified LinkedIn profile URL.
   whatsapp: "", // TODO: Add verified WhatsApp https://wa.me/ URL.
   email: "puteraaqmalputera@gmail.com",
@@ -64,7 +64,7 @@ export const projects: Project[] = [
     imageIsIllustrative: false,
     accent: "violet",
     liveUrl: "https://psmy-cinex.vercel.app/",
-    sourceUrl: "https://github.com/puteraaqmalputera-dot/psmy-cinex-",
+    sourceUrl: "https://github.com/PuteraMY/psmy-cinex-",
   },
   {
     slug: "vanta-fun",
@@ -88,7 +88,7 @@ export const projects: Project[] = [
     imageIsIllustrative: false,
     accent: "sky",
     liveUrl: "https://vanta-fun-vue.vercel.app/",
-    sourceUrl: "https://github.com/puteraaqmalputera-dot/vanta-fun-vue",
+    sourceUrl: "https://github.com/PuteraMY/vanta-fun-vue",
   },
   {
     slug: "nimbuscloud",
