@@ -27,7 +27,7 @@ export type Site = {
 export const site: Site = {
   name: "Putera MY",
   shortName: "Putera",
-  url: "https://putera-my-portfolio.vercel.app",
+  url: "https://puteramy.my",
   description:
     "Portfolio of Putera MY, a Computer Technology student focused on Cloud Computing, IT support and web development.",
   headline: "I build useful things for the web.",
