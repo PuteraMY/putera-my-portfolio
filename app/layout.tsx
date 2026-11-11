@@ -12,6 +12,7 @@ const mono = JetBrains_Mono({ subsets: ["latin"], display: "swap", variable: "--
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
+  alternates: { canonical: site.url },
   title: { default: "Putera MY — Web Developer & Cloud Computing", template: "%s | Putera MY" },
   description: site.description,
   openGraph: {
